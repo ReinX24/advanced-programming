@@ -1,12 +1,4 @@
-@extends('layouts.app', ['page_title' => 'Students'])
-
-@section('css')
-    <style>
-        .title {
-            text-align: center
-        }
-    </style>
-@endsection
+@extends('layouts.app', ['page_title' => 'Create Students'])
 
 @section('title', 'Add Student')
 

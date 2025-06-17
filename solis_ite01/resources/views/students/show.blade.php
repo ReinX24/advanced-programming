@@ -1,13 +1,5 @@
 @extends('layouts.app', ['page_title' => 'Student Details'])
 
-@section('css')
-    <style>
-        .title {
-            text-align: center;
-        }
-    </style>
-@endsection
-
 @section('title', "Student #$student->id")
 
 @section('content')
@@ -16,7 +8,7 @@
             <div class="col-md-8">
 
                 @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show fs-5" role="alert">
                         {{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>

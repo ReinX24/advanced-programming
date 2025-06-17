@@ -2,76 +2,77 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
-use Illuminate\Http\Request;
+use App\Models\User;
 
 class StudentController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         $data["students"] = Student::latest()->paginate(10);
         $data["isAdmin"] = true;
-        $data["user"] = "Rein Solis";
+        $data["user"] = User::findOrFail(1)->first();
 
         return view('students.index', $data);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view("students.create");
     }
 
-    public function show(Student $student)
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreStudentRequest $request)
     {
-        return view('students.show', ["student" => $student]);
-    }
+        $validatedData = $request->validated();
 
-    public function edit(Student $student)
-    {
-        return view('students.edit', ["student" => $student]);
-    }
-
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'fname' => 'required|string|max:128',
-            'lname' => 'required|string|max:128',
-            'email' => 'required|email|max:128|unique:students,email', // Added email validation and uniqueness
-            'contact_number' => 'nullable|string|max:50', // Based on your migration, this is nullable
-            'gender' => 'nullable|in:Male,Female', // Based on your migration, this is nullable and an enum
-            'birthdate' => 'nullable|date', // Based on your migration, this is nullable
-            'complete_address' => 'nullable|string', // Based on your migration, this is nullable
-            'bio' => 'nullable|string', // Based on your migration, this is nullable
-        ]);
-
-        // Create a new Student instance and fill it with the validated data
         $student = Student::create($validatedData);
 
         // Redirect back with a success message (or to another route)
         return redirect()->route("students.show", $student)->with('success', 'Student added successfully!');
     }
 
-    public function update(Request $request, Student $student)
+    /**
+     * Display the specified resource.
+     */
+    public function show(Student $student)
     {
-        // Validation logic for update (similar to store, but consider unique email exception)
-        $validatedData = $request->validate([
-            'fname' => 'required|string|max:128',
-            'lname' => 'required|string|max:128',
-            // Rule::unique('students', 'email')->ignore($student->id) allows current email
-            'email' => ['required', 'email', 'max:128', \Illuminate\Validation\Rule::unique('students')->ignore($student->id)],
-            'contact_number' => 'nullable|string|max:50',
-            'gender' => 'nullable|in:Male,Female',
-            'birthdate' => 'nullable|date',
-            'complete_address' => 'nullable|string',
-            'bio' => 'nullable|string',
-        ]);
+        return view('students.show', ["student" => $student]);
+    }
 
-        // Update the student record
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Student $student)
+    {
+        return view('students.edit', ["student" => $student]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateStudentRequest $request, Student $student)
+    {
+        $validatedData = $request->validated();
+
         $student->update($validatedData);
 
         return redirect()->route('students.show', $student->id)->with('success', 'Student updated successfully!');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Student $student)
     {
         $student->delete();

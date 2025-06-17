@@ -1,12 +1,4 @@
-@extends('layouts.app', ['page_title' => 'Students'])
-
-@section('css')
-    <style>
-        .title {
-            text-align: center
-        }
-    </style>
-@endsection
+@extends('layouts.app', ['page_title' => 'Edit Students'])
 
 @section('title', 'Edit Student')
 
@@ -19,17 +11,16 @@
                         <h2 class="mb-0">Edit Student #{{ $student->id }}</h2>
                     </div>
                     <div class="card-body">
-                        {{-- IMPORTANT: Update the form action and method for updates --}}
                         <form method="POST" action="{{ route('students.update', $student->id) }}">
                             @csrf
-                            @method('PATCH') {{-- This spoofs the PUT method for updates --}}
+                            @method('PATCH')
 
                             {{-- First Name --}}
                             <div class="mb-3">
                                 <label for="fname" class="form-label">First Name <span
                                         class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('fname') is-invalid @enderror"
-                                    id="fname" name="fname" value="{{ old('fname', $student->fname) }}" required>
+                                    id="fname" name="fname" value="{{ old('fname', $student->fname) }}">
                                 {{-- Pre-fill with student data --}}
                                 @error('fname')
                                     <div class="invalid-feedback">
@@ -43,7 +34,7 @@
                                 <label for="lname" class="form-label">Last Name <span
                                         class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('lname') is-invalid @enderror"
-                                    id="lname" name="lname" value="{{ old('lname', $student->lname) }}" required>
+                                    id="lname" name="lname" value="{{ old('lname', $student->lname) }}">
                                 {{-- Pre-fill with student data --}}
                                 @error('lname')
                                     <div class="invalid-feedback">
@@ -56,7 +47,7 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    id="email" name="email" value="{{ old('email', $student->email) }}" required>
+                                    id="email" name="email" value="{{ old('email', $student->email) }}">
                                 {{-- Pre-fill with student data --}}
                                 @error('email')
                                     <div class="invalid-feedback">

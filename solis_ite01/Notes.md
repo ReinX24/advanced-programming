@@ -36,4 +36,16 @@ php artisan db:seed --class=StudentSeeder
 
 php artisan make:controller StudentController
 
-php artisan make:controller ProfileController
+php artisan make:controller ProfileController --resource
+
+#### Creating a form request
+
+php artisan make:request StoreStudentRequest
+
+php artisan make:request UpdateStudentRequest
+
+#### Creating and using a test
+
+php artisan make:test ProfileControllerTest
+
+php artisan test tests/Feature/ProfileControllerTest.php
