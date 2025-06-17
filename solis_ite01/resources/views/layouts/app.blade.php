@@ -24,21 +24,25 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse flex" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Home</a>
-                        </li>
+                        @if (Auth::check())
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('dashboard') }}">Dashboard</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/profile">Profile</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('profile.index') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('profile.index') }}">Profile</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/students">Students</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('students.index') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('students.index') }}">Students</a>
+                            </li>
 
-                        <li class="nav-item dropdown">
+                            {{-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 Dropdown
@@ -52,8 +56,26 @@
                                 </li>
                                 <li><a class="dropdown-item" href="#">Something else here</a></li>
                             </ul>
-                        </li>
+                        </li> --}}
+                        @endif
                     </ul>
+
+                    {{-- If the user is not logged in --}}
+                    @if (!Auth::check())
+                        <div class="flex gap-2">
+                            <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                            <a href="{{ route('register') }}" class="btn btn-secondary">Register</a>
+                        </div>
+                        {{-- If the user is logged in --}}
+                    @elseif (Auth::check())
+                        <div>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+
+                                <button type="submit" class="btn btn-danger">Logout</button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
         </nav>
@@ -61,7 +83,7 @@
 
     <h2 class="text-4xl font-bold my-2 text-primary">@yield('title')</h2>
 
-    <div class="container mx-auto">
+    <div>
         @yield('content')
     </div>
 

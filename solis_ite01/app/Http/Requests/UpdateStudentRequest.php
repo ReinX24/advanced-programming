@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateStudentRequest extends FormRequest
@@ -29,7 +30,7 @@ class UpdateStudentRequest extends FormRequest
             'email' => ['required', 'email', 'max:128', \Illuminate\Validation\Rule::unique('students')->ignore($student->id)],
             'contact_number' => 'nullable|string|max:50',
             'gender' => 'nullable|in:Male,Female',
-            'birthdate' => 'nullable|date',
+            'birthdate' => 'nullable|date|before_or_equal:today',
             'complete_address' => 'nullable|string',
             'bio' => 'nullable|string',
         ];

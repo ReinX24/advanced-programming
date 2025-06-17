@@ -132,8 +132,8 @@
                             </div>
 
                             <div class="d-grid gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg">Update Student</button>
-                                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal"
+                                <button type="submit" class="btn btn-primary">Update Student</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#deleteStudentModal">
                                     Delete Student
                                 </button>

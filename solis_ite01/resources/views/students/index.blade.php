@@ -25,8 +25,6 @@
         </div>
     @endif
 
-    {{-- Your form goes here --}}
-
     <ul class="mt-4 list-group list-group-flush">
         @if ($isAdmin)
             @forelse ($students as $key => $student)

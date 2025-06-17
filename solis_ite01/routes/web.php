@@ -1,41 +1,39 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-//* Index route
 Route::get('/', function () {
-    return view('index');
-});
+    return view('welcome');
+})->name('welcome')->middleware('guest');
 
-//* Profile routes, using a resource controller
-Route::resource('profile', ProfileController::class);
-
-//* Student routes
-Route::resource('students', StudentController::class);
-
-// Test routes
-// /account/Rein
-Route::get('/account/{fullname}', function ($fullname) {
-    return "Hello $fullname";
-});
-
-Route::get('/test', function () {
-    $fname = 'Rein';
-    $lname = 'Solis';
+Route::get('/dashboard', function () {
+    $studentCount = Student::all()->count();
+    $profileCount = User::all()->count();
 
     return view('index', [
-        'fname' => $fname,
-        'lname' => $lname
+        'studentCount' => $studentCount,
+        'profileCount' => $profileCount
     ]);
-});
+})->name('dashboard')->middleware('auth');
 
-Route::get('/contacts', function () {
-    return "This is the contacts page";
-});
+//* Auth routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
 
-Route::get('/users', function () {
-    dd(User::all());
-});
+Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('guest');
+
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register')->middleware('guest');
+
+Route::post('/register', [AuthController::class, 'register'])->name('register.post')->middleware('guest');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth')->middleware('auth');
+
+//* Profile routes, using a resource controller
+Route::resource('profile', ProfileController::class)->middleware('auth');
+
+//* Student routes
+Route::resource('students', StudentController::class)->middleware('auth');

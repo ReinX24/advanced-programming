@@ -27,7 +27,7 @@ class StoreStudentRequest extends FormRequest
             'email' => 'required|email|max:128|unique:students,email', // Added email validation and uniqueness
             'contact_number' => 'nullable|string|max:50', // Based on your migration, this is nullable
             'gender' => 'nullable|in:Male,Female', // Based on your migration, this is nullable and an enum
-            'birthdate' => 'nullable|date', // Based on your migration, this is nullable
+            'birthdate' => 'nullable|date|before_or_equal:today', // Based on your migration, this is nullable
             'complete_address' => 'nullable|string', // Based on your migration, this is nullable
             'bio' => 'nullable|string', // Based on your migration, this is nullable
         ];

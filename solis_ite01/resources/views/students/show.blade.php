@@ -52,9 +52,9 @@
                         </dl>
 
                         <div class="d-grid gap-2 mt-4">
-                            <a href="{{ route('students.edit', $student->id) }}" class="btn btn-primary btn-lg">Edit
+                            <a href="{{ route('students.edit', $student->id) }}" class="btn btn-primary">Edit
                                 Student</a>
-                            <a href="{{ url()->previous() }}" class="btn btn-secondary btn-lg">Back</a>
+                            <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
                         </div>
                     </div>
                 </div>
