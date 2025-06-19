@@ -23,8 +23,9 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         $id = request()->input('id');
-        $user = User::findOrFail($id);
+
         if ($id) {
+            $user = User::findOrFail($id);
             return [
                 'name' => 'required',
                 'email' => ['required', 'email', \Illuminate\Validation\Rule::unique('students')->ignore($user->id)],
