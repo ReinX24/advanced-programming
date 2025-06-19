@@ -49,3 +49,19 @@ php artisan make:request UpdateStudentRequest
 php artisan make:test ProfileControllerTest
 
 php artisan test tests/Feature/ProfileControllerTest.php
+
+#### Creating blade components
+
+php artisan make:component nav --view
+
+php artisan make:component title --view
+
+php artisan make:component sidebar --view
+
+#### Client/User controller
+
+php artisan make:controller Client/UserController --resource
+
+#### UserRequest
+
+php artisan make:request UserRequest

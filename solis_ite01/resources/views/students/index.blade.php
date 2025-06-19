@@ -12,7 +12,7 @@
 @section('title', 'Students List')
 
 @section('content')
-    <div class="title">{{ $user->name }}</div>
+    {{-- <div class="title">{{ $user->name }}</div> --}}
 
     <div class="mb-3">
         <a href="{{ route('students.create') }}" class="btn btn-primary">Add Student</a>
