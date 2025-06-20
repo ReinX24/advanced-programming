@@ -30,21 +30,10 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth')->middleware('auth');
 
 //* Profile routes, using a resource controller
-// Route::resource('profile', ProfileController::class)->middleware('auth')->except('index');
-
-// Route::get('/profile', function () {
-//     return view('profile.index');
-// })->name('profile.index');
+Route::resource('profile', ProfileController::class)->middleware('auth');
 
 //* Student routes
-// Route::resource('students', StudentController::class)->middleware('auth')->except('index');
-
-// Route::get('/students', function () {
-//     return view("students.index", [
-//         'isAdmin' => true,
-//         'students' => Student::latest()->paginate(10)
-//     ]);
-// })->name('students.index');
+Route::resource('students', StudentController::class)->middleware('auth');
 
 Route::prefix('client')->group(function () {
     Route::resource('users', UserController::class);

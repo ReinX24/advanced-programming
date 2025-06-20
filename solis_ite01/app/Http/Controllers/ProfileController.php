@@ -12,11 +12,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $user = User::findOrFail(1)->first();
-
-        return view('profile.index', [
-            'user' => $user
-        ]);
+        return view('profile.index');
     }
 
     /**

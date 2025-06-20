@@ -14,11 +14,19 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $data["students"] = Student::latest()->paginate(10);
-        $data["isAdmin"] = true;
-        $data["user"] = User::findOrFail(1)->first();
+        // $data["students"] = Student::latest()->paginate(10);
+        // $data["isAdmin"] = true;
+        // $data["user"] = User::findOrFail(1)->first();
 
-        return view('students.index', $data);
+        // return view('students.index', $data);
+
+        $isAdmin = true;
+        $students = Student::latest()->paginate(10);
+
+        return view("students.index", [
+            'isAdmin' => $isAdmin,
+            'students' => $students
+        ]);
     }
 
     /**
