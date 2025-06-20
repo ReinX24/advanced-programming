@@ -25,16 +25,19 @@ class UserRequest extends FormRequest
         $id = request()->input('id');
 
         if ($id) {
+            // When the user is being edited
             $user = User::findOrFail($id);
             return [
                 'name' => 'required',
+                // 'email' => 'required|email|unique:users,email, ' . (($id) ? $id : null) . ',id',
                 'email' => ['required', 'email', \Illuminate\Validation\Rule::unique('students')->ignore($user->id)],
-                'password' => 'required|min:6'
+                // sometimes means it only runs when a password is in the field
+                'password' => request()->password !== null ? 'required|min:6' : ''
             ];
         } else {
+            // A new user is name
             return [
                 'name' => 'required',
-                // 'email' => 'required|email|unique:users,email, ' . (($id) ? $id : null) . ',id',
                 'email' => 'required|email|unique:users',
                 'password' => 'required|confirmed|min:6'
             ];
