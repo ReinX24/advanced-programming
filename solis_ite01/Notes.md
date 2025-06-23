@@ -65,3 +65,15 @@ php artisan make:controller Client/UserController --resource
 #### UserRequest
 
 php artisan make:request UserRequest
+
+#### Publish Pagination Links
+
+php artisan vendor:publish
+
+#### Adding Appointments
+
+php artisan make:model Appointment
+
+php artisan make:migration create_appointments_table
+
+php artisan make:controller Client/AppointmentController --resource

@@ -41,20 +41,19 @@
         @enderror
     </div>
 
-    @if (empty($user))
-        {{-- Confirm Password --}}
-        <div class="mb-3">
-            <label for="password_confirmation" class="form-label">Confirm Password <span
-                    class="text-danger">*</span></label>
-            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
-                autocomplete="new-password">
-            {{-- No @error for password_confirmation itself, as validation message comes from 'password' --}}
-        </div>
-    @endif
+    {{-- Confirm Password --}}
+    <div class="mb-3">
+        <label for="password_confirmation" class="form-label">Confirm Password <span
+                class="text-danger">*</span></label>
+        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
+            autocomplete="new-password">
+        {{-- No @error for password_confirmation itself, as validation message comes from 'password' --}}
+    </div>
 
     <div class="d-grid gap-2 mt-4">
         @isset($user)
             <input type="hidden" name="id" value="{{ $user->id }}">
         @endisset
         <button type="submit" class="btn btn-primary btn-lg">{{ isset($user) ? 'Update User' : 'Create' }}</button>
+        <a href="{{ route('students.index') }}" class="btn btn-secondary btn-lg">Back</a>
     </div>

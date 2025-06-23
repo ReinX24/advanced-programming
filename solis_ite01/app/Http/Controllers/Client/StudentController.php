@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Client;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -14,19 +15,11 @@ class StudentController extends Controller
      */
     public function index()
     {
-        // $data["students"] = Student::latest()->paginate(10);
-        // $data["isAdmin"] = true;
-        // $data["user"] = User::findOrFail(1)->first();
+        $data["students"] = Student::latest()->paginate(10);
+        $data["isAdmin"] = true;
+        $data["user"] = Auth::user();
 
-        // return view('students.index', $data);
-
-        $isAdmin = true;
-        $students = Student::latest()->paginate(10);
-
-        return view("students.index", [
-            'isAdmin' => $isAdmin,
-            'students' => $students
-        ]);
+        return view('client.students.index', $data);
     }
 
     /**
@@ -34,7 +27,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view("students.create");
+        return view("client.students.create");
     }
 
     /**
@@ -55,7 +48,7 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        return view('students.show', ["student" => $student]);
+        return view('client.students.show', ["student" => $student]);
     }
 
     /**
@@ -63,7 +56,7 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        return view('students.edit', ["student" => $student]);
+        return view('client.students.edit', ["student" => $student]);
     }
 
     /**

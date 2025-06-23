@@ -31,8 +31,7 @@ class UserRequest extends FormRequest
                 'name' => 'required',
                 // 'email' => 'required|email|unique:users,email, ' . (($id) ? $id : null) . ',id',
                 'email' => ['required', 'email', \Illuminate\Validation\Rule::unique('students')->ignore($user->id)],
-                // sometimes means it only runs when a password is in the field
-                'password' => request()->password !== null ? 'required|min:6' : ''
+                'password' => request()->password !== null ? 'required|min:8|confirmed' : ''
             ];
         } else {
             // A new user is name
@@ -42,5 +41,13 @@ class UserRequest extends FormRequest
                 'password' => 'required|confirmed|min:6'
             ];
         }
+    }
+
+    public function messages()
+    {
+        // Custom error messages for certain validation rules
+        return [
+            'password.required' => 'The password field is required.'
+        ];
     }
 }

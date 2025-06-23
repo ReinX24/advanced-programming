@@ -8,15 +8,16 @@
 
 @section('content')
     <div class="mb-3">
-        <a href="{{ route('users.create') }}" class="btn btn-outline-primary btn-sm">Add New User</a>
+        <a href="{{ route('users.create') }}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-plus-circle"></i>
+            Add New User</a>
     </div>
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    @session('success')
+        <div class="alert alert-success alert-dismissible fade show" role="alert" {{ session('success') }} <button type="button"
+            class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    @endif
+    @endsession
 
     <table class="table table-striped">
         <thead>
@@ -42,16 +43,21 @@
                     <td>{{ $user->created_date }}</td>
                     <td>
                         <a href="{{ route('users.edit', $user) }}" class="btn btn-secondary btn-sm">Edit</a>
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#deleteUserModal">
+
+                        @if ($user->id !== Auth::user()->id)
+                            <button onclick="removeUser({{ $user->id }})" class="btn btn-danger btn-sm">Delete</button>
+
+                            {{-- <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#deleteUserModal{{ $user->id }}">
                             Delete
-                        </button>
+                        </button> --}}
+                        @endif
                     </td>
                 </tr>
 
                 {{-- Delete student modal using bootstrap --}}
-                <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModal"
-                    aria-hidden="true">
+                <div class="modal fade" id="deleteUserModal{{ $user->id }}" tabindex="-1"
+                    aria-labelledby="deleteUserModal{{ $user->id }}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -60,9 +66,9 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Are you sure you want to delete {{ $user->name }} {{ $user->email }}? This action cannot
-                                be
-                                undone.
+                                Are you sure you want to delete {{ $user->name }} {{ $user->email }}? This action
+                                cannot
+                                be undone
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -89,6 +95,18 @@
 
 @push('scripts')
     <script>
-        console.log('test');
+        function removeUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "{{ url('client/users') }}/" + id,
+                    dataType: "json",
+                    success: function(response) {
+                        alert('User deleted successfully!');
+                        location.reload();
+                    }
+                });
+            }
+        }
     </script>
 @endpush

@@ -13,7 +13,7 @@
 
         <div class="row g-4">
             <!-- Students Card -->
-            {{-- <div class="col-md-6 col-lg-6">
+            <div class="col-md-6 col-lg-6">
                 <div class="card shadow-sm h-100 border-primary">
                     <div class="card-body text-center">
                         <h5 class="card-title text-primary">Recorded Students</h5>
@@ -25,7 +25,7 @@
                             Students</a>
                     </div>
                 </div>
-            </div> --}}
+            </div>
 
             <!-- Users Card -->
             <div class="col-md-6 col-lg-6">

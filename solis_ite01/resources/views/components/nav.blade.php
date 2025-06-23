@@ -17,9 +17,9 @@
                         {{-- <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('profile.index') ? 'active' : '' }}"
                                 aria-current="page" href="{{ route('profile.index') }}">Profile</a>
-                        </li>
+                        </li> --}}
 
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('students.index') ? 'active' : '' }}"
                                 aria-current="page" href="{{ route('students.index') }}">Students</a>
                         </li> --}}
@@ -27,6 +27,38 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}"
                                 aria-current="page" href="{{ route('users.index') }}">Manage Users</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Students
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('students.index') }}">Student List</a></li>
+                                <li>
+                                    {{-- <hr class="dropdown-divider"> --}}
+                                </li>
+                                <li><a class="dropdown-item" href="{{ route('students.create') }}">Add New Student</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Appointments
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('appointments.index') }}">Manage
+                                        Appointments</a></li>
+                                <li>
+                                    {{-- <hr class="dropdown-divider"> --}}
+                                </li>
+                                <li><a class="dropdown-item" href="{{ route('appointments.create') }}">Add New
+                                        Appointment</a>
+                                </li>
+                            </ul>
                         </li>
                     @endif
                 </ul>
@@ -40,9 +72,9 @@
                     {{-- If the user is logged in --}}
                 @elseif (Auth::check())
                     <div class="d-flex gap-2 align-items-center">
-                        <span class="fw-bold">
+                        <a href="{{ route('profile.index') }}" class="fw-bold link-underline link-underline-opacity-0">
                             {{ Auth::user()->name }}
-                        </span>
+                        </a>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
 
