@@ -32,6 +32,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
+                                <i class="bi bi-pencil-fill"></i>
                                 Students
                             </a>
                             <ul class="dropdown-menu">
@@ -47,6 +48,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
+                                <i class="bi bi-file-person-fill"></i>
                                 Appointments
                             </a>
                             <ul class="dropdown-menu">

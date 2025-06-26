@@ -44,7 +44,7 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>
                             <a href="{{ route('students.show', $student) }}">
-                                {{ $student->fname }} {{ $student->lname }}
+                                {{ $student->full_name }}
                             </a>
                         </td>
                         <td>{{ $student->email }}</td>

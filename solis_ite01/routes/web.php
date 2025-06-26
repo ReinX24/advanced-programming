@@ -5,8 +5,10 @@ use App\Http\Controllers\Client\AppointmentController;
 use App\Http\Controllers\Client\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\StudentController;
+use App\Mail\HelloMail;
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,10 +41,16 @@ Route::prefix('client')->group(function () {
     //* Student routes
     Route::resource('students', StudentController::class);
     //* Appointment routes
-    Route::resource('appointments', AppointmentController::class)->only(['index', 'create']);
+    Route::resource('appointments', AppointmentController::class);
+
+    Route::patch('/appointments/{appointment}/toggleStatus', [AppointmentController::class, 'toggleStatus'])->name('appointments.toggleStatus');
 })->middleware('auth');
 
 //* Test route to be used for layout and styling testing
 Route::get('/test', function () {
     return view('test');
+});
+
+Route::get('/mailtest', function () {
+    Mail::to('reinX244@gmail.com')->send(new HelloMail());
 });

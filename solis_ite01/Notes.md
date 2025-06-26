@@ -77,3 +77,9 @@ php artisan make:model Appointment
 php artisan make:migration create_appointments_table
 
 php artisan make:controller Client/AppointmentController --resource
+
+#### Emailing student once appointment is made
+
+php artisan make:mail AppointmentCreated
+
+php artisan make:mail HelloMail
