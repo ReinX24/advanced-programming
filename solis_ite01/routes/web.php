@@ -5,6 +5,7 @@ use App\Http\Controllers\Client\AppointmentController;
 use App\Http\Controllers\Client\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\StudentController;
+use App\Mail\AppointmentCreated;
 use App\Mail\HelloMail;
 use App\Models\Student;
 use App\Models\User;

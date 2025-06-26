@@ -16,7 +16,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        $appointments = Appointment::latest()->paginate(10);
+        $appointments = Appointment::with('student')->latest()->paginate(10);
 
         return view('client.appointments.index', [
             'appointments' => $appointments,
@@ -45,7 +45,7 @@ class AppointmentController extends Controller
         $student = Student::findOrFail($validatedData["student_id"]);
 
         $appointment = Appointment::create([
-            'student_id' => $validatedData["student_id"],
+            'student_id' => $student->id,
             'title' => $validatedData["title"],
             'appointment_date' => $validatedData["appointment_date"],
             'appointment_time' => $validatedData["appointment_time"],
@@ -53,7 +53,6 @@ class AppointmentController extends Controller
             'status' => 'Pending'
         ]);
 
-        // TODO: Finish send email functionality
         if ($student->email) {
             Mail::to($student->email)->send(new AppointmentCreated($appointment));
         }

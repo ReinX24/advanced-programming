@@ -83,3 +83,11 @@ php artisan make:controller Client/AppointmentController --resource
 php artisan make:mail AppointmentCreated
 
 php artisan make:mail HelloMail
+
+#### Publishing laravel mail components / templates
+
+php artisan vendor:publish --tag=laravel-mail
+
+#### Reference for sending email
+
+https://www.youtube.com/watch?v=PeK_tD4T3Og

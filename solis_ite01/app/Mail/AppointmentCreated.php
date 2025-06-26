@@ -40,7 +40,7 @@ class AppointmentCreated extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.appointments.created',
+            markdown: 'emails.appointments.created',
             with: [
                 'appointment' => $this->appointment,
                 'student' => $this->appointment->student
