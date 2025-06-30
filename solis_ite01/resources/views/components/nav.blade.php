@@ -74,9 +74,14 @@
                     {{-- If the user is logged in --}}
                 @elseif (Auth::check())
                     <div class="d-flex gap-2 align-items-center">
-                        <a href="{{ route('profile.index') }}" class="fw-bold link-underline link-underline-opacity-0">
-                            {{ Auth::user()->name }}
-                        </a>
+                        <div>
+                            <img src="{{ Auth::user()->display_photo }}" alt="Profile Photo" class="img-thumbnail"
+                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                            <a href="{{ route('profile.index') }}"
+                                class="fw-bold link-underline link-underline-opacity-0">
+                                {{ Auth::user()->name }}
+                            </a>
+                        </div>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
 

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -23,9 +24,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo_path'
     ];
 
-    protected $appends  = ['created_date'];
+    protected $appends  = ['created_date', 'display_photo', 'registered_date'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -53,5 +55,24 @@ class User extends Authenticatable
     protected function getCreatedDateAttribute()
     {
         return Carbon::parse($this->created_at)->format('F d, Y h:i A (T)');
+    }
+
+    public function profilePhotoUrl()
+    {
+        return $this->profile_photo_path
+            ? Storage::url($this->profile_photo_path)
+            : asset('images/default_profile.png');
+    }
+
+    public function getDisplayPhotoAttribute()
+    {
+        return $this->profile_photo_path
+            ? Storage::url($this->profile_photo_path)
+            : asset('images/default_profile.png');
+    }
+
+    public function getRegisteredDateAttribute()
+    {
+        return Carbon::parse($this->created_at)->format('F Y');
     }
 }

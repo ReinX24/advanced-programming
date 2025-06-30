@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AppointmentRequest;
+use App\Jobs\SendAppointmentEmailJob;
 use App\Mail\AppointmentCreated;
 use App\Models\Appointment;
 use App\Models\Student;
@@ -54,7 +55,10 @@ class AppointmentController extends Controller
         ]);
 
         if ($student->email) {
-            Mail::to($student->email)->send(new AppointmentCreated($appointment));
+            // Mail::to($student->email)->send(new AppointmentCreated($appointment));
+
+            // Another way of sending the email through a job
+            SendAppointmentEmailJob::dispatch($student, $appointment)->delay(now()->addSeconds(5));
         }
 
         return redirect()->route('appointments.show', $appointment)->with('success', 'Appointment added successfully!');

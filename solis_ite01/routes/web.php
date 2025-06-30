@@ -2,13 +2,14 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\AppointmentController;
+use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\UserController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\StudentController;
 use App\Mail\AppointmentCreated;
 use App\Mail\HelloMail;
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -33,9 +34,6 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register'])->name('register.post')->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth')->middleware('auth');
 
-//* Profile routes, using a resource controller
-Route::resource('profile', ProfileController::class)->middleware('auth');
-
 Route::prefix('client')->group(function () {
     //* Users routes
     Route::resource('users', UserController::class);
@@ -45,6 +43,9 @@ Route::prefix('client')->group(function () {
     Route::resource('appointments', AppointmentController::class);
 
     Route::patch('/appointments/{appointment}/toggleStatus', [AppointmentController::class, 'toggleStatus'])->name('appointments.toggleStatus');
+
+    //* Profile routes, using a resource controller
+    Route::resource('profile', ProfileController::class);
 })->middleware('auth');
 
 //* Test route to be used for layout and styling testing
@@ -55,3 +56,7 @@ Route::get('/test', function () {
 Route::get('/mailtest', function () {
     Mail::to('reinX244@gmail.com')->send(new HelloMail());
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

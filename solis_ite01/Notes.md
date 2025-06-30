@@ -91,3 +91,26 @@ php artisan vendor:publish --tag=laravel-mail
 #### Reference for sending email
 
 https://www.youtube.com/watch?v=PeK_tD4T3Og
+
+#### Creating jobs
+
+php artisan make:job SendAppointmentEmailJob
+
+#### Running jobs
+
+php artisan queue:work
+
+#### Profile Controller
+
+php artisan make:controller Client/ProfileController --resource
+
+php artisan make:request ProfileRequest
+
+#### Adding profile photo
+
+php artisan make:migration add_profile_photo_path_to_users_table --table=users
+
+#### Installing ui components and auth logic for resetting password
+composer require laravel/ui
+
+php artisan ui bootstrap --auth
