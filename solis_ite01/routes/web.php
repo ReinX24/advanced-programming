@@ -28,11 +28,11 @@ Route::get('/dashboard', function () {
 })->name('dashboard')->middleware('auth');
 
 //* Auth routes
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('guest');
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register')->middleware('guest');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post')->middleware('guest');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth')->middleware('auth');
+// Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
+// Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('guest');
+// Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register')->middleware('guest');
+// Route::post('/register', [AuthController::class, 'register'])->name('register.post')->middleware('guest');
+// Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth')->middleware('auth');
 
 Route::prefix('client')->group(function () {
     //* Users routes
