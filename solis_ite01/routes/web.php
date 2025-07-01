@@ -5,10 +5,12 @@ use App\Http\Controllers\Client\AppointmentController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\UserController;
 use App\Http\Controllers\Client\StudentController;
+use App\Http\Controllers\OtpLoginController;
 use App\Mail\AppointmentCreated;
 use App\Mail\HelloMail;
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -60,3 +62,15 @@ Route::get('/mailtest', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Show the initial OTP login form (where user enters email)
+Route::get('/otp/login', [OtpLoginController::class, 'showLoginForm'])->name('otp.login');
+Route::post('/otp/send', [OtpLoginController::class, 'sendOtp'])->name('otp.send');
+
+// Show the OTP verification form (where user enters OTP)
+Route::get('/otp/verify', [OtpLoginController::class, 'showOtpVerificationForm'])->name('otp.verify.form');
+Route::post('/otp/verify', [OtpLoginController::class, 'verifyOtp'])->name('otp.verify');
+
+Route::get('/test', function (Request $request) {
+    return "Test";
+})->middleware('auth:sanctum');

@@ -111,6 +111,41 @@ php artisan make:request ProfileRequest
 php artisan make:migration add_profile_photo_path_to_users_table --table=users
 
 #### Installing ui components and auth logic for resetting password
+
 composer require laravel/ui
 
 php artisan ui bootstrap --auth
+
+#### Implementing OTP
+
+php artisan make:migration add_otp_fields_to_users_table --table=users
+
+php artisan migrate
+
+php artisan make:notification OtpNotification
+
+php artisan make:controller OtpLoginController
+
+#### Using mail
+
+Create mail to sendOTP
+
+php artisan make:mail OtpMail
+
+Create job to send email
+
+php artisan make:job SendOtpEmailJob
+
+Create otp template under mails folder
+
+#### Installing twilio
+
+composer require aloha/twilio
+
+php artisan vendor:publish --provider="Aloha\Twilio\Support\Laravel\ServiceProvider"
+
+#### Installing Laravel Sanctum
+
+php artisan install:api
+
+php artisan make:controller Api/Auth/LoginController --api
