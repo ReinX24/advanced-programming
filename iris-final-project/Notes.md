@@ -17,3 +17,9 @@ php artisan make:seeder JobOpening Seeder
 php artisan migrate:fresh --seed
 
 php artisan make:controller JobOpeningController --resource
+
+#### Tailwind config file
+
+npm install -D tailwindcss postcss autoprefixer
+
+npx tailwindcss init

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\JobOpening;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,9 +13,20 @@ class JobOpeningSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create 50 job openings using the factory
-        JobOpening::factory()->count(50)->create();
+        // Create 20 active job openings
+        JobOpening::factory()->count(20)->active()->create();
+        $this->command->info('Created 20 active job openings.');
 
-        $this->command->info('50 job openings seeded successfully!');
+        // Create 20 inactive job openings
+        JobOpening::factory()->count(20)->inactive()->create();
+        $this->command->info('Created 20 inactive job openings.');
+
+        // Create 20 job openings that will expire today
+        JobOpening::factory()->count(20)->expiresToday()->create();
+        $this->command->info('Created 20 inactive job openings.');
+
+        // Create 10 expired job openings
+        JobOpening::factory()->count(10)->expired()->create();
+        $this->command->info('Created 10 expired job openings.');
     }
 }

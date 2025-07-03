@@ -14,6 +14,7 @@ class JobOpening extends Model
         'description',
         'date_needed',
         'date_expiry',
+        'status',
         'location',
     ];
 

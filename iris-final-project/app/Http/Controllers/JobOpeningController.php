@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobOpening;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Twilio\Rest\Bulkexports\V1\Export\JobList;
 
 class JobOpeningController extends Controller
 {
@@ -24,7 +27,7 @@ class JobOpeningController extends Controller
      */
     public function create()
     {
-        //
+        return view('job_openings.create');
     }
 
     /**
@@ -32,7 +35,19 @@ class JobOpeningController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date_needed' => 'required|date',
+            'date_expiry' => 'nullable|date|after_or_equal:date_needed',
+            'status' => ['required', Rule::in(['active', 'inactive'])],
+            'location' => 'required|string|max:255',
+        ]);
+
+        $job = JobOpening::create($validatedData);
+
+        return redirect()->route('jobs.show', $job)
+            ->with('success', 'Job opening created successfully!');
     }
 
     /**
@@ -54,16 +69,69 @@ class JobOpeningController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, JobOpening $job)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date_needed' => 'required|date',
+            'date_expiry' => 'nullable|date|after_or_equal:date_needed',
+            'location' => 'required|string|max:255',
+        ]);
+
+        $dateNeeded = Carbon::parse($validatedData['date_needed']);
+        $dateExpiry = $validatedData['date_expiry'] ? Carbon::parse($validatedData['date_expiry']) : null;
+
+        $determinedStatus = null;
+
+        if ($dateExpiry) {
+            if ($dateNeeded->greaterThan($dateExpiry)) {
+                $determinedStatus = 'expired';
+            } elseif ($dateNeeded->lessThan($dateExpiry) && Carbon::now()->lessThan($dateExpiry)) {
+                $determinedStatus = 'active';
+            } elseif ($dateExpiry->isPast()) {
+                $determinedStatus = 'expired';
+            }
+        } else {
+            // Set status as active if the dateExpiry is null
+            $determinedStatus = 'active';
+        }
+
+        $validatedData['status'] = $determinedStatus;
+
+        $job->update($validatedData);
+
+        return redirect()->route('jobs.show', $job)
+            ->with('success', 'Job opening updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(JobOpening $job)
     {
-        //
+        $job->delete();
+
+        return redirect()->route("jobs.index")->with('success', 'Job opening deleted successfully!');
+    }
+
+    public function toggleStatus(JobOpening $job)
+    {
+        $job->status = $job->status === "active" ? "inactive" : "active";
+
+        $job->save();
+
+        return redirect()->route('jobs.show', $job)
+            ->with('success', 'Job opening updated successfully!');
+    }
+
+    public function markAsExpired(JobOpening $job)
+    {
+        $job->status = 'expired';
+
+        $job->save();
+
+        return redirect()->route('jobs.show', $job)
+            ->with('success', 'Job opening updated successfully!');
     }
 }

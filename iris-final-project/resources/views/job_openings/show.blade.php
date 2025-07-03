@@ -8,8 +8,27 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                {{-- Dismissible Flash Message for 'success' --}}
+                @if (session('success'))
+                    <div id="success-alert"
+                        class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
+                        role="alert">
+                        <strong class="font-bold">Success!</strong>
+                        <span class="block sm:inline">{{ session('success') }}</span>
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer flex items-center"
+                            onclick="document.getElementById('success-alert').style.display='none'">
+                            <svg class="fill-current h-4 w-4 text-green-500" role="button"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <title>Close</title>
+                                <path
+                                    d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
+                            </svg>
+                        </span>
+                    </div>
+                @endif
+
                 <div class="p-6 text-gray-900">
-                    <!-- Job Title (already in header, but good for consistency or if header isn't always visible) -->
+                    <!-- Job Title -->
                     <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $job->title }}</h1>
 
                     <!-- Location -->
@@ -22,6 +41,93 @@
                         </svg>
                         <span class="font-semibold me-2">Location:</span> {{ $job->location }}
                     </p>
+
+                    <!-- Status Badge -->
+                    <div class="mb-4">
+                        @php
+                            $statusClass = '';
+                            switch ($job->status) {
+                                case 'active':
+                                    $statusClass = 'bg-green-100 text-green-800';
+                                    break;
+                                case 'inactive':
+                                    $statusClass = 'bg-yellow-100 text-yellow-800';
+                                    break;
+                                case 'expired':
+                                    $statusClass = 'bg-red-100 text-red-800';
+                                    break;
+                                default:
+                                    $statusClass = 'bg-gray-100 text-gray-800';
+                                    break;
+                            }
+                        @endphp
+                        <span
+                            class="inline-flex items-center px-3 py-0.5 rounded-full text-lg font-medium {{ $statusClass }}">
+                            {{ ucfirst($job->status) }}
+                        </span>
+                    </div>
+
+                    {{-- Toggle for Active/Inactive Status (only if not expired) --}}
+                    @if ($job->status !== 'expired' && \Carbon\Carbon::now() < $job->date_expiry)
+                        <div class="mt-4 mb-6">
+                            <label for="status-toggle" class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" id="status-toggle" class="sr-only"
+                                        {{ $job->status === 'active' ? 'checked' : '' }}
+                                        onchange="
+                                            let newStatus = this.checked ? 'active' : 'inactive';
+                                            // document.getElementById('hidden-status-input').value = newStatus;
+                                            document.getElementById('status-update-form').submit();
+                                        ">
+                                    <div class="block bg-gray-600 w-14 h-8 rounded-full"></div>
+                                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition">
+                                    </div>
+                                </div>
+                                <div id="status-text" class="ml-3 text-gray-700 font-medium">
+                                    {{ $job->status === 'active' ? 'Job is Active' : 'Job is Inactive' }}
+                                </div>
+                            </label>
+                            {{-- Hidden form to submit status update --}}
+                            <form id="status-update-form" action="{{ route('jobs.toggle', $job) }}" method="POST"
+                                class="hidden">
+                                @csrf
+                                @method('PUT')
+
+                                {{-- <input type="hidden" name="status" id="hidden-status-input"
+                                    value="{{ $job->status }}"> --}}
+                            </form>
+                        </div>
+                        <style>
+                            /* Custom styles for the toggle switch */
+                            input:checked+.block {
+                                background-color: #48bb78;
+                                /* Tailwind green-500 */
+                            }
+
+                            input:checked+.block+.dot {
+                                transform: translateX(100%);
+                            }
+                        </style>
+                    @elseif (\Carbon\Carbon::now() >= $job->expiry_date && $job->status !== 'expired')
+                        {{-- Mark as Expired Button --}}
+                        <div class="mt-4 mb-6">
+                            <form action="{{ route('jobs.mark-expired', $job) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to mark this job as expired? This action cannot be undone.');">
+                                @csrf
+                                @method('PUT')
+
+                                <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Mark as Expired
+                                </button>
+                            </form>
+                        </div>
+                    @endif
 
                     <!-- Dates -->
                     <div class="text-md text-gray-600 mb-6">
@@ -66,6 +172,18 @@
                         {!! nl2br(e($job->description)) !!}
                     </div>
 
+                    <!-- Timestamps -->
+                    <div class="text-sm text-gray-500 mt-6 pt-4 border-t border-gray-200">
+                        <p class="mb-1">
+                            <span class="font-medium text-gray-700">Created:</span>
+                            {{ $job->created_at->format('F d, Y H:i:s') }}
+                        </p>
+                        <p>
+                            <span class="font-medium text-gray-700">Last Updated:</span>
+                            {{ $job->updated_at->format('F d, Y H:i:s') }}
+                        </p>
+                    </div>
+
                     <!-- Action Buttons -->
                     <div class="mt-8 flex justify-end space-x-4">
                         <!-- Back Button -->
@@ -79,20 +197,23 @@
                             Back to Job Openings
                         </a>
 
-                        <!-- Edit Button -->
-                        <a href="{{ route('jobs.edit', $job->id) }}"
-                            class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                </path>
-                            </svg>
-                            Edit Job
-                        </a>
+                        {{-- Expired jobs cannot be edited anymore --}}
+                        @if ($job->status !== 'expired')
+                            <!-- Edit Button -->
+                            <a href="{{ route('jobs.edit', $job) }}"
+                                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                    </path>
+                                </svg>
+                                Edit Job
+                            </a>
+                        @endif
 
                         <!-- Delete Button (using a form for proper DELETE request) -->
-                        <form action="{{ route('jobs.destroy', $job->id) }}" method="POST"
+                        <form action="{{ route('jobs.destroy', $job) }}" method="POST"
                             onsubmit="return confirm('Are you sure you want to delete this job opening?');">
                             @csrf
                             @method('DELETE')

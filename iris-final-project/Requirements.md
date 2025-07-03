@@ -4,18 +4,27 @@
 
 ## Application Information
 
+-   Name
+-   Age
+-   Curriculum Vitae (Document)
 -   Working Experience
 -   Educational Attainment
 -   Medical (Pending, Fit To Work)
--   Status (Line Up, On Process, For Interview, For Medical)
+-   Status (Line Up, On Process, For Interview, For Medical, Deployed)
 
-## Job Openings (CRUD)
+## Job Openings (DONE)
 
 -   Job Title
 -   Job Description
 -   Date Needed / Start
 -   Date Expiry / End
+-   Status (Active, Inactive, Expired)
 -   Location
+
+## Job Application
+
+-   Applicant
+-   Job
 
 ## Finance
 

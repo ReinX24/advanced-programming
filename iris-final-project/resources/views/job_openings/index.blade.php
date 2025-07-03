@@ -8,6 +8,38 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                {{-- Dismissible Flash Message for 'success' --}}
+                @if (session('success'))
+                    <div id="success-alert"
+                        class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
+                        role="alert">
+                        <strong class="font-bold">Success!</strong>
+                        <span class="block sm:inline">{{ session('success') }}</span>
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer flex items-center"
+                            onclick="document.getElementById('success-alert').style.display='none'">
+                            <svg class="fill-current h-4 w-4 text-green-500" role="button"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <title>Close</title>
+                                <path
+                                    d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
+                            </svg>
+                        </span>
+                    </div>
+                @endif
+
+                <!-- Create Job Button -->
+                <div class="flex justify-end mb-6">
+                    <a href="{{ route('jobs.create') }}"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
+                            </path>
+                        </svg>
+                        Create New Job
+                    </a>
+                </div>
+
                 <!-- Main container for job cards using grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                     @forelse ($jobs as $job)
@@ -22,7 +54,7 @@
                                 </h2>
 
                                 <!-- Location -->
-                                <p class="text-md text-gray-600 mb-4 flex items-center">
+                                <p class="text-md text-gray-600 mb-2 flex items-center">
                                     <svg class="w-5 h-5 mr-2 text-indigo-500" fill="currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd"
@@ -32,22 +64,51 @@
                                     {{ $job->location }}
                                 </p>
 
-                                <!-- Job Description (truncated for card, full description on detail page) -->
-                                <!-- Added flex-grow to push subsequent content down -->
-                                <p class="text-gray-700 text-base leading-relaxed mb-4 line-clamp-3 flex-grow">
-                                    {{-- {{ $job->job_description }} --}}
+                                <!-- Status Badge -->
+                                <div class="mb-4">
+                                    @php
+                                        $statusClass = '';
+                                        switch ($job->status) {
+                                            case 'active':
+                                                $statusClass = 'bg-green-100 text-green-800';
+                                                break;
+                                            case 'inactive':
+                                                $statusClass = 'bg-yellow-100 text-yellow-800';
+                                                break;
+                                            case 'expired':
+                                                $statusClass = 'bg-red-100 text-red-800';
+                                                break;
+                                            default:
+                                                $statusClass = 'bg-gray-100 text-gray-800';
+                                                break;
+                                        }
+                                    @endphp
+                                    <span
+                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium {{ $statusClass }}">
+                                        {{ ucfirst($job->status) }}
+
+                                        {{-- If the job is active or inactive but current day is date_expiry --}}
+                                        @if (\Carbon\Carbon::now() > $job->date_expiry && $job->status !== 'expired')
+                                            (Mark as Expired Today!)
+                                        @endif
+                                    </span>
+                                </div>
+
+                                <!-- Job Description (truncated for card) -->
+                                <p class="text-gray-700 text-base leading-relaxed mb-4 flex-grow">
+                                    {{ Str::limit($job->description, 64) }}
                                 </p>
 
                                 <!-- Dates -->
                                 <div class="text-sm text-gray-500 mb-4">
                                     <p class="flex items-center mb-1">
-                                        <svg class="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20"
-                                            xmlns="http://www.w3.org/2000/svg">
+                                        <svg class="w-4 h-4 mr-1 text-green-500 me-1" fill="currentColor"
+                                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd"
                                                 d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
                                                 clip-rule="evenodd"></path>
                                         </svg>
-                                        <span class="font-medium text-gray-700">Start Date:</span>
+                                        <span class="font-medium text-gray-700 me-1">Start Date:</span>
                                         {{ $job->date_needed->format('M d, Y') }}
                                     </p>
                                     @if ($job->date_expiry)
@@ -58,7 +119,7 @@
                                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 9.586V6z"
                                                     clip-rule="evenodd"></path>
                                             </svg>
-                                            <span class="font-medium text-gray-700">Expires:</span>
+                                            <span class="font-medium text-gray-700 me-1">Expires:</span>
                                             {{ $job->date_expiry->format('M d, Y') }}
                                         </p>
                                     @else
@@ -69,17 +130,17 @@
                                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 9.586V6z"
                                                     clip-rule="evenodd"></path>
                                             </svg>
-                                            <span class="font-medium text-gray-700">Expires:</span> Open until filled
+                                            <span class="font-medium text-gray-700 me-1">Expires:</span> Open until
+                                            filled
                                         </p>
                                     @endif
                                 </div>
 
                                 <!-- Call to Action Button (e.g., View Details) -->
-                                <!-- Added mt-auto to push the button to the bottom -->
                                 <a href="{{ route('jobs.show', $job->id) }}"
                                     class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold text-center
-                                          hover:bg-indigo-700 transition-colors duration-200 focus:outline-none focus:ring-2
-                                          focus:ring-indigo-500 focus:ring-offset-2 w-full mt-auto">
+                                            hover:bg-indigo-700 transition-colors duration-200 focus:outline-none focus:ring-2
+                                            focus:ring-indigo-500 focus:ring-offset-2 w-full mt-auto">
                                     View Details
                                 </a>
                             </div>

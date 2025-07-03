@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->date('date_needed');
             $table->date('date_expiry')->nullable(); // Can be null
+            $table->enum('status', ['active', 'inactive', 'expired']);
             $table->string('location');
             $table->timestamps();
         });
