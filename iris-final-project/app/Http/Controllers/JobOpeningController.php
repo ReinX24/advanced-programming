@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CheckAllJobsForExpiry;
+use App\Events\JobExpiryCheckRequested;
 use App\Models\JobOpening;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,6 +18,8 @@ class JobOpeningController extends Controller
     public function index()
     {
         $jobs = JobOpening::latest()->paginate(6);
+
+        event(new CheckAllJobsForExpiry());
 
         return view('job_openings.index', [
             'jobs' => $jobs
@@ -55,6 +59,8 @@ class JobOpeningController extends Controller
      */
     public function show(JobOpening $job)
     {
+        event(new JobExpiryCheckRequested($job));
+
         return view('job_openings.show', ['job' => $job]);
     }
 
@@ -100,6 +106,8 @@ class JobOpeningController extends Controller
         $validatedData['status'] = $determinedStatus;
 
         $job->update($validatedData);
+
+        event(new JobExpiryCheckRequested($job));
 
         return redirect()->route('jobs.show', $job)
             ->with('success', 'Job opening updated successfully!');

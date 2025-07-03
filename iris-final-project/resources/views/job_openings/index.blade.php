@@ -86,11 +86,6 @@
                                     <span
                                         class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium {{ $statusClass }}">
                                         {{ ucfirst($job->status) }}
-
-                                        {{-- If the job is active or inactive but current day is date_expiry --}}
-                                        @if (\Carbon\Carbon::now() > $job->date_expiry && $job->status !== 'expired')
-                                            (Mark as Expired Today!)
-                                        @endif
                                     </span>
                                 </div>
 

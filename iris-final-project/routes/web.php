@@ -20,6 +20,5 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('jobs', JobOpeningController::class)->middleware('auth');
 Route::put('/jobs/{job}/toggleStatus', [JobOpeningController::class, 'toggleStatus'])->middleware('auth')->name('jobs.toggle');
-Route::put('/jobs/{job}/markAsExpired', [JobOpeningController::class, 'markAsExpired'])->middleware('auth')->name('jobs.mark-expired');
 
 require __DIR__ . '/auth.php';

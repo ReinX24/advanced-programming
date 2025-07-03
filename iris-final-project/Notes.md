@@ -23,3 +23,9 @@ php artisan make:controller JobOpeningController --resource
 npm install -D tailwindcss postcss autoprefixer
 
 npx tailwindcss init
+
+#### Creating event for checking jobs' status
+
+php artisan make:event JobExpiryCheckRequested
+
+php artisan make:listener UpdateJobStatusOnExpiry

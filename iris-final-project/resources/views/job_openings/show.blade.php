@@ -108,25 +108,6 @@
                                 transform: translateX(100%);
                             }
                         </style>
-                    @elseif (\Carbon\Carbon::now() >= $job->expiry_date && $job->status !== 'expired')
-                        {{-- Mark as Expired Button --}}
-                        <div class="mt-4 mb-6">
-                            <form action="{{ route('jobs.mark-expired', $job) }}" method="POST"
-                                onsubmit="return confirm('Are you sure you want to mark this job as expired? This action cannot be undone.');">
-                                @csrf
-                                @method('PUT')
-
-                                <button type="submit"
-                                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    Mark as Expired
-                                </button>
-                            </form>
-                        </div>
                     @endif
 
                     <!-- Dates -->
