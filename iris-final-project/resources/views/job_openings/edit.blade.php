@@ -1,0 +1,115 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Edit Job
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <div class="p-6 text-gray-900">
+                    <!-- Job Title (already in header, but good for consistency or if header isn't always visible) -->
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $job->title }}</h1>
+
+                    <!-- Location -->
+                    <p class="text-lg text-gray-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-indigo-600" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="font-semibold me-2">Location:</span> {{ $job->location }}
+                    </p>
+
+                    <!-- Dates -->
+                    <div class="text-md text-gray-600 mb-6">
+                        <p class="flex items-center mb-2">
+                            <svg class="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-semibold text-gray-800 me-2">Start Date:</span>
+                            {{ $job->date_needed->format('F d, Y') }}
+                        </p>
+                        @if ($job->date_expiry)
+                            <p class="flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-red-600" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 9.586V6z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="font-semibold text-gray-800 me-2">Expires On:</span>
+                                {{ $job->date_expiry->format('F d, Y') }}
+                            </p>
+                        @else
+                            <p class="flex items-center text-gray-500">
+                                <svg class="w-5 h-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 9.586V6z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="font-semibold text-gray-800 me-2">Expires:</span> Open until filled
+                            </p>
+                        @endif
+                    </div>
+
+                    <!-- Job Description -->
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Job Description</h3>
+                    <div class="prose max-w-none text-gray-700 leading-relaxed mb-8">
+                        {{-- Using nl2br to preserve line breaks from the database --}}
+                        {!! nl2br(e($job->description)) !!}
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="mt-8 flex justify-end space-x-4">
+                        <!-- Back Button -->
+                        <a href="{{ route('jobs.index') }}"
+                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            Back to Job Openings
+                        </a>
+
+                        <!-- Edit Button -->
+                        <a href="{{ route('jobs.edit', $job->id) }}"
+                            class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                </path>
+                            </svg>
+                            Edit Job
+                        </a>
+
+                        <!-- Delete Button (using a form for proper DELETE request) -->
+                        <form action="{{ route('jobs.destroy', $job->id) }}" method="POST"
+                            onsubmit="return confirm('Are you sure you want to delete this job opening?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
+                                Delete Job
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

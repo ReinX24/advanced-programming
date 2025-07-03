@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class JobOpening extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'description',
+        'date_needed',
+        'date_expiry',
+        'location',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'date_needed' => 'date',
+            'date_expiry' => 'date',
+        ];
+    }
+}
