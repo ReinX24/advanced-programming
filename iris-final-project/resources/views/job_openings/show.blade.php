@@ -68,7 +68,7 @@
                     </div>
 
                     {{-- Toggle for Active/Inactive Status (only if not expired) --}}
-                    @if ($job->status !== 'expired' && \Carbon\Carbon::now() < $job->date_expiry)
+                    @if ($job->status !== 'expired')
                         <div class="mt-4 mb-6">
                             <label for="status-toggle" class="flex items-center cursor-pointer">
                                 <div class="relative">
@@ -178,20 +178,17 @@
                             Back to Job Openings
                         </a>
 
-                        {{-- Expired jobs cannot be edited anymore --}}
-                        @if ($job->status !== 'expired')
-                            <!-- Edit Button -->
-                            <a href="{{ route('jobs.edit', $job) }}"
-                                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                    </path>
-                                </svg>
-                                Edit Job
-                            </a>
-                        @endif
+                        <!-- Edit Button -->
+                        <a href="{{ route('jobs.edit', $job) }}"
+                            class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                </path>
+                            </svg>
+                            Edit Job
+                        </a>
 
                         <!-- Delete Button (using a form for proper DELETE request) -->
                         <form action="{{ route('jobs.destroy', $job) }}" method="POST"

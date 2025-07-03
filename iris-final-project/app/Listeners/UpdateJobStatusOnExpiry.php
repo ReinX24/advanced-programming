@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\CheckJobForExpiry;
 use App\Events\JobExpiryCheckRequested;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,7 +22,7 @@ class UpdateJobStatusOnExpiry
     /**
      * Handle the event.
      */
-    public function handle(JobExpiryCheckRequested $event): void
+    public function handle(CheckJobForExpiry $event): void
     {
         $job = $event->job;
 

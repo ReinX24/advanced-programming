@@ -4,13 +4,14 @@
 
 ## Application Information
 
--   Name
--   Age
+-   Name (String)
+-   Age (Integer)
+-   Profile Photo (String)
 -   Curriculum Vitae (Document)
--   Working Experience
--   Educational Attainment
--   Medical (Pending, Fit To Work)
--   Status (Line Up, On Process, For Interview, For Medical, Deployed)
+-   Working Experience (Text)
+-   Educational Attainment (Enum, [Primary, Secondary, Vocational, Bachelor, Master,Doctoral])
+-   Medical (Enum, [Pending, Fit To Work])
+-   Status (Enumm [Line Up, On Process, For Interview, For Medical, Deployed])
 
 ## Job Openings (DONE)
 

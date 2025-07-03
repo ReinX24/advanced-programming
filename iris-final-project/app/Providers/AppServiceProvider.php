@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use App\Events\CheckAllJobsForExpiry;
+use App\Events\CheckJobForExpiry;
 use App\Events\JobExpiryCheckRequested;
-use App\Listeners\UpdateAllJobStatuses;
+use App\Listeners\UpdateAllJobStatusesOnExpiry;
 use App\Listeners\UpdateJobStatusOnExpiry;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -24,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(JobExpiryCheckRequested::class, [UpdateJobStatusOnExpiry::class, 'handle']);
-        Event::listen(CheckAllJobsForExpiry::class, [UpdateAllJobStatuses::class, 'handle']);
+        Event::listen(CheckJobForExpiry::class, [UpdateJobStatusOnExpiry::class, 'handle']);
+        Event::listen(CheckAllJobsForExpiry::class, [UpdateAllJobStatusesOnExpiry::class, 'handle']);
     }
 }

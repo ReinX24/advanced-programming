@@ -29,3 +29,15 @@ npx tailwindcss init
 php artisan make:event JobExpiryCheckRequested
 
 php artisan make:listener UpdateJobStatusOnExpiry
+
+php artisan make:event CheckAllJobsForExpiry
+
+php artisan make:listener UpdateAllJobStatuses
+
+#### Creating Applicants
+
+php artisan make:model Applicant -mfsc --resource
+
+php artisan migrate
+
+php artisan storage:link

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\JobOpeningController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -20,5 +21,7 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('jobs', JobOpeningController::class)->middleware('auth');
 Route::put('/jobs/{job}/toggleStatus', [JobOpeningController::class, 'toggleStatus'])->middleware('auth')->name('jobs.toggle');
+
+Route::resource('applicants', ApplicantController::class)->middleware('auth');
 
 require __DIR__ . '/auth.php';

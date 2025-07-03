@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 
-class UpdateAllJobStatuses implements ShouldQueue
+class UpdateAllJobStatusesOnExpiry implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -42,6 +42,7 @@ class UpdateAllJobStatuses implements ShouldQueue
                     $newStatus = 'expired';
                 }
             }
+
             // Update the job status if it has changed
             if ($job->status !== $newStatus) {
                 $job->status = $newStatus;
