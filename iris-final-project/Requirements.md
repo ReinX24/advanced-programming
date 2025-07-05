@@ -2,7 +2,7 @@
 
 ## Deadline: July 11, 2025
 
-## Application Information
+## Application Information (DONE)
 
 -   Name (String)
 -   Age (Integer)
@@ -22,7 +22,7 @@
 -   Status (Active, Inactive, Expired)
 -   Location
 
-## Job Application
+## Job Application (DONE)
 
 -   Applicant
 -   Job

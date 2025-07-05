@@ -68,7 +68,7 @@
                     </div>
 
                     {{-- Toggle for Active/Inactive Status (only if not expired) --}}
-                    @if ($job->status !== 'expired')
+                    @if ($job->status !== 'expired' && ($job->date_expiry === null || \Carbon\Carbon::now()->lessThan($job->date_expiry)))
                         <div class="mt-4 mb-6">
                             <label for="status-toggle" class="flex items-center cursor-pointer">
                                 <div class="relative">
@@ -76,7 +76,7 @@
                                         {{ $job->status === 'active' ? 'checked' : '' }}
                                         onchange="
                                             let newStatus = this.checked ? 'active' : 'inactive';
-                                            // document.getElementById('hidden-status-input').value = newStatus;
+                                            document.getElementById('hidden-status-input').value = newStatus;
                                             document.getElementById('status-update-form').submit();
                                         ">
                                     <div class="block bg-gray-600 w-14 h-8 rounded-full"></div>
@@ -88,13 +88,20 @@
                                 </div>
                             </label>
                             {{-- Hidden form to submit status update --}}
-                            <form id="status-update-form" action="{{ route('jobs.toggle', $job) }}" method="POST"
+                            <form id="status-update-form" action="{{ route('jobs.update', $job->id) }}" method="POST"
                                 class="hidden">
                                 @csrf
                                 @method('PUT')
-
-                                {{-- <input type="hidden" name="status" id="hidden-status-input"
-                                    value="{{ $job->status }}"> --}}
+                                <input type="hidden" name="status" id="hidden-status-input"
+                                    value="{{ $job->status }}">
+                                {{-- Include other required fields for validation --}}
+                                <input type="hidden" name="title" value="{{ $job->title }}">
+                                <input type="hidden" name="description" value="{{ $job->description }}">
+                                <input type="hidden" name="date_needed"
+                                    value="{{ $job->date_needed->format('Y-m-d') }}">
+                                <input type="hidden" name="date_expiry"
+                                    value="{{ $job->date_expiry ? $job->date_expiry->format('Y-m-d') : '' }}">
+                                <input type="hidden" name="location" value="{{ $job->location }}">
                             </form>
                         </div>
                         <style>
@@ -108,6 +115,34 @@
                                 transform: translateX(100%);
                             }
                         </style>
+                    @elseif ($job->status !== 'expired' && $job->date_expiry && \Carbon\Carbon::now()->greaterThanOrEqualTo($job->date_expiry))
+                        {{-- Mark as Expired Button --}}
+                        <div class="mt-4 mb-6">
+                            <form action="{{ route('jobs.update', $job->id) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to mark this job as expired? This action cannot be undone.');">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="expired">
+                                {{-- Include other required fields for validation --}}
+                                <input type="hidden" name="title" value="{{ $job->title }}">
+                                <input type="hidden" name="description" value="{{ $job->description }}">
+                                <input type="hidden" name="date_needed"
+                                    value="{{ $job->date_needed->format('Y-m-d') }}">
+                                <input type="hidden" name="date_expiry"
+                                    value="{{ $job->date_expiry ? $job->date_expiry->format('Y-m-d') : '' }}">
+                                <input type="hidden" name="location" value="{{ $job->location }}">
+
+                                <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Mark as Expired
+                                </button>
+                            </form>
+                        </div>
                     @endif
 
                     <!-- Dates -->
@@ -163,6 +198,100 @@
                             <span class="font-medium text-gray-700">Last Updated:</span>
                             {{ $job->updated_at->format('F d, Y H:i:s') }}
                         </p>
+                    </div>
+
+                    {{-- Applicants for this Job Opening --}}
+                    <div class="mt-8">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Applicants for this Job</h3>
+
+                        <!-- Create Job Button -->
+                        <div class="flex justify-end mb-6">
+                            <a href="{{ route('jobs.add_applicant', $job) }}"
+                                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4">
+                                    </path>
+                                </svg>
+                                Add Applicant
+                            </a>
+                        </div>
+
+                        <div class="overflow-x-auto shadow-md sm:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            ID
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Name
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Age
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Educational Attainment
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th scope="col" class="relative px-6 py-3">
+                                            <span class="sr-only">Actions</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @forelse ($job->applicants as $applicant)
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                {{ $applicant->id }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {{ $applicant->name }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {{ $applicant->age }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {{ $applicant->educational_attainment }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {{ $applicant->status }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <a href="{{ route('applicants.show', $applicant->id) }}"
+                                                    class="text-indigo-600 hover:text-indigo-900 mr-2">View</a>
+                                                {{-- Detach/Remove Button --}}
+                                                <form
+                                                    action="{{ route('jobs.detach_applicant', ['job' => $job, 'applicant' => $applicant]) }}"
+                                                    method="POST" class="inline-block"
+                                                    onsubmit="return confirm('Are you sure you want to remove {{ $applicant->name }} from this job opening?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                                        Remove
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6"
+                                                class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                                                No applicants are currently associated with this job opening.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- Action Buttons -->

@@ -25,4 +25,10 @@ class JobOpening extends Model
             'date_expiry' => 'date',
         ];
     }
+
+    public function applicants()
+    {
+        return $this->belongsToMany(Applicant::class, 'job_opening_applicants', 'job_opening_id', 'applicant_id')
+            ->withTimestamps();
+    }
 }

@@ -131,7 +131,7 @@
                         </a>
 
                         <!-- Delete Button (using a form for proper DELETE request) -->
-                        <form action="{{ route('applicants.destroy', $applicant->id) }}" method="POST"
+                        <form action="{{ route('applicants.destroy', $applicant) }}" method="POST"
                             onsubmit="return confirm('Are you sure you want to delete this applicant?');">
                             @csrf
                             @method('DELETE')

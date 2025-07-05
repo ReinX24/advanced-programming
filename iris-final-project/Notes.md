@@ -41,3 +41,11 @@ php artisan make:model Applicant -mfsc --resource
 php artisan migrate
 
 php artisan storage:link
+
+#### Creating applications
+
+php artisan make:migration create_job_opening_application
+
+php artisan migrate
+
+php artisan make:seeder ApplicantSeeder

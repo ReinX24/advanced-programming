@@ -20,4 +20,10 @@ class Applicant extends Model
         'medical',
         'status',
     ];
+
+    public function jobOpenings()
+    {
+        return $this->belongsToMany(JobOpening::class, 'job_opening_applicants', 'applicant_id', 'job_opening_id')
+            ->withTimestamps();
+    }
 }
