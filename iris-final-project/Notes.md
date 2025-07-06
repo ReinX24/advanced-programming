@@ -44,8 +44,12 @@ php artisan storage:link
 
 #### Creating applications
 
-php artisan make:migration create_job_opening_application
+php artisan make:migration create_job_opening_applicat
 
 php artisan migrate
 
 php artisan make:seeder ApplicantSeeder
+
+#### Creating finance records / application fee
+
+php artisan make:model ApplicationFee -mfsc --resource

@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\ApplicationFeeController;
 use App\Http\Controllers\JobOpeningController;
 use App\Http\Controllers\ProfileController;
+use App\Models\ApplicationFee;
 use App\Models\JobOpening;
 use Illuminate\Support\Facades\Route;
 
@@ -29,5 +31,8 @@ Route::delete('/jobs/{job}/detachApplicant/{applicant}', [JobOpeningController::
 
 // Applicant routes
 Route::resource('applicants', ApplicantController::class)->middleware('auth');
+
+// Finance routes / Application fee
+Route::resource('application_fees', ApplicationFeeController::class)->middleware('auth');
 
 require __DIR__ . '/auth.php';
