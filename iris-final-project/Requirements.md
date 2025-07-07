@@ -27,7 +27,7 @@
 -   Applicant
 -   Job
 
-## Finance
+## Finance (DONE)
 
 -   Applicant has paid for application fee
 
@@ -44,7 +44,7 @@
 -   Filter By User
 -   Status (Line Up, On Process, For Interview, For Medical, Deployed)
 
-#### Job Reports
+#### Job Reports (TO TEST)
 
 -   Filter Date Range
 -   Filter By User

@@ -53,3 +53,7 @@ php artisan make:seeder ApplicantSeeder
 #### Creating finance records / application fee
 
 php artisan make:model ApplicationFee -mfsc --resource
+
+#### Reports
+
+php artisan make:controller ReportController

@@ -4,6 +4,7 @@ use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\ApplicationFeeController;
 use App\Http\Controllers\JobOpeningController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Models\ApplicationFee;
 use App\Models\JobOpening;
 use Illuminate\Support\Facades\Route;
@@ -34,5 +35,13 @@ Route::resource('applicants', ApplicantController::class)->middleware('auth');
 
 // Finance routes / Application fee
 Route::resource('application_fees', ApplicationFeeController::class)->middleware('auth');
+
+// Report Routes
+Route::get('/reports/jobs', [ReportController::class, 'jobReports'])->name('reports.jobs');
+
+Route::get('/reports/applicants', [ReportController::class, 'applicantReports'])->name('reports.applicants');
+
+Route::get('/reports/jobs/download-csv', [ReportController::class, 'downloadJobsCsv'])
+    ->name('reports.jobs.download-csv');
 
 require __DIR__ . '/auth.php';

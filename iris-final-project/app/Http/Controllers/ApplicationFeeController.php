@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Applicant;
 use App\Models\ApplicationFee;
+use App\Models\JobOpening;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ApplicationFeeController extends Controller
 {
@@ -13,7 +16,9 @@ class ApplicationFeeController extends Controller
     public function index()
     {
         // Eager load applicant and jobOpening relationships for efficient display
-        $applicationFees = ApplicationFee::with(['applicant', 'jobOpening'])->paginate(10);
+        $applicationFees = ApplicationFee::with(['applicant', 'jobOpening'])
+            ->latest()
+            ->paginate(10);
         return view('application_fees.index', compact('applicationFees'));
     }
 
@@ -22,7 +27,10 @@ class ApplicationFeeController extends Controller
      */
     public function create()
     {
-        dd('TODO: finish create page');
+        $applicants = Applicant::all(); // Get all applicants for the dropdown
+        $jobOpenings = JobOpening::all(); // Get all job openings for the dropdown
+
+        return view('application_fees.create', compact('applicants', 'jobOpenings'));
     }
 
     /**
@@ -30,7 +38,28 @@ class ApplicationFeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'applicant_id' => 'required|exists:applicants,id',
+            'job_opening_id' => 'nullable|exists:job_openings,id',
+            'amount' => 'required|numeric|min:0|max:999999.99',
+            'currency' => ['required', 'string', 'max:3', Rule::in(['PHP', 'USD', 'EUR', 'GBP', 'JPY'])], // Adjust currency options as needed
+            'payment_date' => 'nullable|date',
+            'payment_method' => ['required', Rule::in(['Cash', 'Bank Transfer', 'Credit Card', 'Online Gateway'])],
+            'notes' => 'nullable|string',
+        ]);
+
+        // Handle nullable fields properly
+        if (empty($validatedData['job_opening_id'])) {
+            $validatedData['job_opening_id'] = null;
+        }
+        if (empty($validatedData['payment_date'])) {
+            $validatedData['payment_date'] = null;
+        }
+
+        ApplicationFee::create($validatedData);
+
+        return redirect()->route('application_fees.index')
+            ->with('success', 'Application fee created successfully!');
     }
 
     /**
@@ -38,7 +67,7 @@ class ApplicationFeeController extends Controller
      */
     public function show(ApplicationFee $applicationFee)
     {
-        dd('TODO: finish show page: ' . $applicationFee);
+        return view('application_fees.show', ['applicationFee' => $applicationFee]);
     }
 
     /**
@@ -46,7 +75,10 @@ class ApplicationFeeController extends Controller
      */
     public function edit(ApplicationFee $applicationFee)
     {
-        dd('TODO: finish edit page: ' . $applicationFee);
+        $applicants = Applicant::all(); // Get all applicants for the dropdown
+        $jobOpenings = JobOpening::all(); // Get all job openings for the dropdown
+
+        return view('application_fees.edit', compact('applicationFee', 'applicants', 'jobOpenings'));
     }
 
     /**
@@ -54,7 +86,29 @@ class ApplicationFeeController extends Controller
      */
     public function update(Request $request, ApplicationFee $applicationFee)
     {
-        //
+        $validatedData = $request->validate([
+            'applicant_id' => 'required|exists:applicants,id',
+            'job_opening_id' => 'nullable|exists:job_openings,id',
+            'amount' => 'required|numeric|min:0|max:999999.99',
+            'currency' => ['required', 'string', 'max:3', Rule::in(['PHP', 'USD', 'EUR', 'GBP', 'JPY'])], // Adjust currency options as needed
+            'payment_date' => 'nullable|date',
+            'payment_method' => ['required', Rule::in(['Cash', 'Bank Transfer', 'Credit Card', 'Online Gateway'])],
+            'status' => ['required', Rule::in(['Paid', 'Pending', 'Failed', 'Refunded', 'Waived'])],
+            'notes' => 'nullable|string',
+        ]);
+
+        // Handle nullable fields properly
+        if (empty($validatedData['job_opening_id'])) {
+            $validatedData['job_opening_id'] = null;
+        }
+        if (empty($validatedData['payment_date'])) {
+            $validatedData['payment_date'] = null;
+        }
+
+        $applicationFee->update($validatedData);
+
+        return redirect()->route('application_fees.show', $applicationFee)
+            ->with('success', 'Application fee updated successfully!');
     }
 
     /**
@@ -62,6 +116,9 @@ class ApplicationFeeController extends Controller
      */
     public function destroy(ApplicationFee $applicationFee)
     {
-        //
+        $applicationFee->delete();
+
+        return redirect()->route('application_fees.index')
+            ->with('success', 'Application Fee deleted successfully!');
     }
 }
