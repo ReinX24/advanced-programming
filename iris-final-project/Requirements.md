@@ -38,9 +38,9 @@
 
 ## Reports (Export to EXCEL)
 
-#### Applicant Reports
+#### Applicant Reports (TO TEST)
 
--   Filter Date Range (Start Date and End Date)
+-   Filter Date Range (Start Date and End Date) TO IMPLEMENT, FILTER CREATED AT
 -   Filter By User
 -   Status (Line Up, On Process, For Interview, For Medical, Deployed)
 

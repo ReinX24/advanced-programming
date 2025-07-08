@@ -15,6 +15,9 @@ class ReportController extends Controller
         $query = JobOpening::query();
 
         // Apply existing filters
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        }
         if ($request->filled('date_needed')) {
             $query->whereDate('date_needed', '>=', $request->input('date_needed'));
         }
@@ -35,7 +38,7 @@ class ReportController extends Controller
         }
 
         // Ensure applicants_count is loaded for the view
-        $jobOpenings = $query->withCount('applicants')->paginate(10); // Or your preferred pagination
+        $jobOpenings = $query->paginate(10); // Or your preferred pagination
 
         // Fetch all applicants for the dropdown
         $applicants = Applicant::orderBy('name')->get(); // Assuming 'name' is the applicant's name field
@@ -43,10 +46,35 @@ class ReportController extends Controller
         return view('reports.jobs', compact('jobOpenings', 'applicants'));
     }
 
-    public function applicantReports()
+    public function applicantReports(Request $request)
     {
-        // Logic to fetch and prepare applicant-related report data
-        return view('reports.applicants'); // You'll need to create this view
+        $query = Applicant::query();
+
+        // Apply filters based on request
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+        if ($request->filled('min_age')) {
+            $query->where('age', '>=', $request->input('min_age'));
+        }
+        if ($request->filled('max_age')) {
+            $query->where('age', '<=', $request->input('max_age'));
+        }
+        if ($request->filled('educational_attainment')) {
+            $query->where('educational_attainment', $request->input('educational_attainment'));
+        }
+        if ($request->filled('medical')) {
+            $query->where('medical', $request->input('medical'));
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Paginate the results
+        $applicants = $query->paginate(10); // Adjust pagination limit as needed
+
+        // Pass the paginated data and request query to the view
+        return view('reports.applicants', compact('applicants'));
     }
 
     public function downloadJobsCsv(Request $request)
@@ -106,6 +134,75 @@ class ReportController extends Controller
                     $job->date_needed->format('M d, Y'),
                     $job->date_expiry ? $job->date_expiry->format('M d, Y') : 'N/A',
                     $job->applicants_count
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
+    }
+
+    public function downloadApplicantsCsv(Request $request)
+    {
+        $query = Applicant::query();
+
+        // Re-apply filters for the CSV download
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+        if ($request->filled('min_age')) {
+            $query->where('age', '>=', $request->input('min_age'));
+        }
+        if ($request->filled('max_age')) {
+            $query->where('age', '<=', $request->input('max_age'));
+        }
+        if ($request->filled('educational_attainment')) {
+            $query->where('educational_attainment', $request->input('educational_attainment'));
+        }
+        if ($request->filled('medical')) {
+            $query->where('medical', $request->input('medical'));
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        $applicants = $query->get(); // Get all filtered applicants for download
+
+        $filename = 'applicants_report_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($applicants) {
+            $file = fopen('php://output', 'w');
+
+            // Add CSV headers
+            fputcsv($file, [
+                'ID',
+                'Name',
+                'Age',
+                'Educational Attainment',
+                'Medical',
+                'Status',
+                'Working Experience' // Include this if you want it in CSV
+            ]);
+
+            // Add data rows
+            foreach ($applicants as $applicant) {
+                fputcsv($file, [
+                    $applicant->id,
+                    $applicant->name,
+                    $applicant->age,
+                    $applicant->educational_attainment,
+                    $applicant->medical,
+                    $applicant->status,
+                    $applicant->working_experience
                 ]);
             }
 

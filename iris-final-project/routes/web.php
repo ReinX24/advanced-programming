@@ -37,11 +37,14 @@ Route::resource('applicants', ApplicantController::class)->middleware('auth');
 Route::resource('application_fees', ApplicationFeeController::class)->middleware('auth');
 
 // Report Routes
-Route::get('/reports/jobs', [ReportController::class, 'jobReports'])->name('reports.jobs');
+Route::get('/reports/jobs', [ReportController::class, 'jobReports'])->name('reports.jobs')->middleware('auth');
 
-Route::get('/reports/applicants', [ReportController::class, 'applicantReports'])->name('reports.applicants');
+Route::get('/reports/applicants', [ReportController::class, 'applicantReports'])->name('reports.applicants')->middleware('auth');
 
 Route::get('/reports/jobs/download-csv', [ReportController::class, 'downloadJobsCsv'])
-    ->name('reports.jobs.download-csv');
+    ->name('reports.jobs.download-csv')->middleware('auth');
+
+Route::get('/reports/applicants/download-csv', [ReportController::class, 'downloadApplicantsCsv'])
+    ->name('reports.applicants.download-csv')->middleware('auth');
 
 require __DIR__ . '/auth.php';

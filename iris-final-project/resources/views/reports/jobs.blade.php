@@ -15,6 +15,15 @@
                     <form method="GET" action="{{ route('reports.jobs') }}"
                         class="mb-6 bg-gray-50 p-4 rounded-lg shadow-inner">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {{-- Name Filter --}}
+                            <div>
+                                <label for="title" class="block text-sm font-medium text-gray-700">Job
+                                    Title</label>
+                                <input type="text" name="title" id="title"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    placeholder="e.g., Book Keeper" value="{{ request('title') }}">
+                            </div>
+
                             {{-- Applicants Filter --}}
                             <div>
                                 <label for="applicant_id"
