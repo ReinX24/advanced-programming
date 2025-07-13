@@ -57,3 +57,7 @@ php artisan make:model ApplicationFee -mfsc --resource
 #### Reports
 
 php artisan make:controller ReportController
+
+#### Login user, register user, create user, delete user
+
+php artisan make:model UserController -mfsc --resource

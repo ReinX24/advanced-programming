@@ -129,6 +129,14 @@
             <x-responsive-nav-link :href="route('applicants.index')" :active="request()->routeIs('applicants.index')">
                 {{ __('Applicants') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('reports.jobs')" :active="request()->routeIs('reports.jobs')">
+                {{ __('Job Reports') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('reports.applicants')" :active="request()->routeIs('reports.applicants')">
+                {{ __('Applicant Reports') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
