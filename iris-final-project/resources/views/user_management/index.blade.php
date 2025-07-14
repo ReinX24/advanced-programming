@@ -9,6 +9,25 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-12 text-gray-900">
+                    {{-- Dismissible Flash Message for 'success' --}}
+                    @if (session('success'))
+                        <div id="success-alert"
+                            class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
+                            role="alert">
+                            <strong class="font-bold">Success!</strong>
+                            <span class="block sm:inline">{{ session('success') }}</span>
+                            <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer flex items-center"
+                                onclick="document.getElementById('success-alert').style.display='none'">
+                                <svg class="fill-current h-4 w-4 text-green-500" role="button"
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <title>Close</title>
+                                    <path
+                                        d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
+                                </svg>
+                            </span>
+                        </div>
+                    @endif
+
                     <!-- Create Job Button -->
                     <div class="flex justify-end mb-6">
                         <a href="{{ route('user_management.create') }}"
@@ -91,8 +110,8 @@
                                                     Owner
                                                 </span>
                                             @else
-                                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                                {{-- You might add delete functionality here as well --}}
+                                                <a href="{{ route('user_management.edit', $user->id) }}"
+                                                    class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -107,6 +126,14 @@
                             </tbody>
                         </table>
                     </div>
+
+
+                    {{-- Pagination links --}}
+                    @if ($users instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                        <div class="mt-8">
+                            {{ $users->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
