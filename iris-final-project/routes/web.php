@@ -5,8 +5,10 @@ use App\Http\Controllers\ApplicationFeeController;
 use App\Http\Controllers\JobOpeningController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserManagementController;
 use App\Models\ApplicationFee;
 use App\Models\JobOpening;
+use App\Models\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -46,5 +48,9 @@ Route::get('/reports/jobs/download-csv', [ReportController::class, 'downloadJobs
 
 Route::get('/reports/applicants/download-csv', [ReportController::class, 'downloadApplicantsCsv'])
     ->name('reports.applicants.download-csv')->middleware('auth');
+
+// User management routes
+// TODO:
+Route::resource('user_management', UserManagementController::class)->middleware('auth');
 
 require __DIR__ . '/auth.php';

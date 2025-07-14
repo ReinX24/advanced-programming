@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserController;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserControllerController extends Controller
+class UserManagementController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $users = User::latest()->paginate(10);
+
+        return view("user_management.index", [
+            "users" => $users
+        ]);
     }
 
     /**
@@ -20,7 +24,7 @@ class UserControllerController extends Controller
      */
     public function create()
     {
-        //
+        dd('create');
     }
 
     /**
@@ -28,38 +32,38 @@ class UserControllerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd('store');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(UserController $userController)
+    public function show(string $id)
     {
-        //
+        dd('show');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(UserController $userController)
+    public function edit(string $id)
     {
-        //
+        dd('edit');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, UserController $userController)
+    public function update(Request $request, string $id)
     {
-        //
+        dd('update');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserController $userController)
+    public function destroy(string $id)
     {
-        //
+        dd('destroy');
     }
 }

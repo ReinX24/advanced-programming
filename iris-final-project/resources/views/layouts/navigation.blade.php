@@ -28,6 +28,10 @@
                         {{ __('Finances') }}
                     </x-nav-link>
 
+                    <x-nav-link :href="route('user_management.index')" :active="request()->routeIs('user_management.index')">
+                        {{ __('Management') }}
+                    </x-nav-link>
+
                     {{-- Dropdown link goes here --}}
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
                         <x-dropdown align="left" width="48">

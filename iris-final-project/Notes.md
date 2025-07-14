@@ -60,4 +60,4 @@ php artisan make:controller ReportController
 
 #### Login user, register user, create user, delete user
 
-php artisan make:model UserController -mfsc --resource
+php artisan make:migration add_role_to_users
