@@ -10,18 +10,31 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\WorkExperienceController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Models\Applicant;
 use App\Models\ApplicationFee;
 use App\Models\EducationalAttainment;
 use App\Models\JobOpening;
+use App\Models\User;
 use App\Models\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return view('start');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    // Fetch real data from the database
+    $totalApplicants = Applicant::count();
+    $totalJobOpenings = JobOpening::count();
+    $totalUsers = User::count();
+
+
+    return view('dashboard', [
+        'totalApplicants' => $totalApplicants,
+        'totalJobOpenings' => $totalJobOpenings,
+        'totalUsers' => $totalUsers,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

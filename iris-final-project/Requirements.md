@@ -1,6 +1,6 @@
 # IRIS (Interactive Recruitment Information System)
 
-## Deadline: July 11, 2025
+## Deadline: July 18, 2025
 
 ## Application Information (DONE)
 
