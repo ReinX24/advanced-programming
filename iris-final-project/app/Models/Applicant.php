@@ -26,4 +26,14 @@ class Applicant extends Model
         return $this->belongsToMany(JobOpening::class, 'job_opening_applicants', 'applicant_id', 'job_opening_id')
             ->withTimestamps();
     }
+
+    public function educationalAttainments()
+    {
+        return $this->hasMany(EducationalAttainment::class);
+    }
+
+    public function workExperiences()
+    {
+        return $this->hasMany(WorkExperience::class);
+    }
 }

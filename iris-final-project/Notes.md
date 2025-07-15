@@ -73,3 +73,15 @@ php artisan make:listener LogSuccessfulLogin --event=Illuminate\Auth\Events\Logi
 #### Logging admin actions
 
 php artisan make:model AdminActionLog
+
+#### Educational Attainment
+
+php artisan make:migration create_educational_attainments_table
+
+php artisan make:controller EducationalAttainmentControler --resource
+
+#### Work Experience
+
+php artisan make:migration create_work_experiences_table
+
+php artisan make:model WorkExperience

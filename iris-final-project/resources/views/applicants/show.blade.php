@@ -8,6 +8,42 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                {{-- Success/Error Flash Messages --}}
+                @if (session('success'))
+                    <div id="success-alert"
+                        class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
+                        role="alert">
+                        <strong class="font-bold">Success!</strong>
+                        <span class="block sm:inline">{{ session('success') }}</span>
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer flex items-center"
+                            onclick="document.getElementById('success-alert').style.display='none'">
+                            <svg class="fill-current h-4 w-4 text-green-500" role="button"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <title>Close</title>
+                                <path
+                                    d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
+                            </svg>
+                        </span>
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div id="error-alert"
+                        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+                        role="alert">
+                        <strong class="font-bold">Error!</strong>
+                        <span class="block sm:inline">{{ session('error') }}</span>
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer flex items-center"
+                            onclick="document.getElementById('error-alert').style.display='none'">
+                            <svg class="fill-current h-4 w-4 text-red-500" role="button"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <title>Close</title>
+                                <path
+                                    d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
+                            </svg>
+                        </span>
+                    </div>
+                @endif
+
                 <div class="p-6 text-gray-900">
                     <h1 class="text-3xl font-bold text-gray-900 mb-6">Applicant: {{ $applicant->name }}</h1>
 
@@ -40,8 +76,6 @@
                                 {{ $applicant->name }}</p>
                             <p class="text-lg text-gray-700 mb-2"><span class="font-semibold">Age:</span>
                                 {{ $applicant->age }}</p>
-                            <p class="text-lg text-gray-700 mb-2"><span class="font-semibold">Educational
-                                    Attainment:</span> {{ $applicant->educational_attainment }}</p>
                             <p class="text-lg text-gray-700 mb-2"><span class="font-semibold">Medical Status:</span>
                                 {{ $applicant->medical }}</p>
                             <p class="text-lg text-gray-700 mb-2"><span class="font-semibold">Applicant Status:</span>
@@ -49,15 +83,154 @@
                         </div>
                     </div>
 
-                    {{-- Working Experience --}}
+                    {{-- Educational Attainment Section --}}
                     <div class="mb-8">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Working Experience</h3>
-                        <div
-                            class="prose max-w-none text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-md shadow-inner">
-                            @if ($applicant->working_experience)
-                                {!! nl2br(e($applicant->working_experience)) !!}
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Educational Attainment</h3>
+
+                        <!-- Add Educational Attainment Button -->
+                        <div class="flex justify-end mb-6">
+                            <a href="{{ route('educational-attainments.create', $applicant) }}"
+                                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4">
+                                    </path>
+                                </svg>
+                                Add Educational Attainment
+                            </a>
+                        </div>
+
+                        {{-- Educational attainment records of the applicant --}}
+                        <div class="overflow-x-auto shadow-md sm:rounded-lg">
+                            @if ($applicant->educationalAttainments->isNotEmpty())
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                School</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Level</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Years</th>
+                                            <th scope="col" class="relative px-6 py-3"><span
+                                                    class="sr-only">Actions</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @foreach ($applicant->educationalAttainments as $education)
+                                            <tr class="hover:bg-gray-50">
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    {{ $education->school }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $education->educational_level }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $education->start_year ?? 'N/A' }} -
+                                                    {{ $education->end_year ?? 'Present' }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <a href="{{ route('educational-attainments.edit', $education) }}"
+                                                        class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
+                                                    <form
+                                                        action="{{ route('educational-attainments.destroy', $education) }}"
+                                                        method="POST" class="inline-block"
+                                                        onsubmit="return confirm('Are you sure you want to delete this educational record?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="text-red-600 hover:text-red-900">Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             @else
-                                <p class="text-gray-500 italic">No working experience provided.</p>
+                                <div class="bg-gray-50 p-4 rounded-md shadow-inner text-center text-gray-500 italic">
+                                    No educational attainment records found for this applicant.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Work Experience Section --}}
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Work Experience</h3>
+
+                        <!-- Add Work Experience Button -->
+                        <div class="flex justify-end mb-6">
+                            <a href="{{ route('work-experiences.create', $applicant->id) }}"
+                                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4">
+                                    </path>
+                                </svg>
+                                Add Work Experience
+                            </a>
+                        </div>
+
+                        {{-- Work experience records of the applicant --}}
+                        <div class="overflow-x-auto shadow-md sm:rounded-lg">
+                            @if ($applicant->workExperiences->isNotEmpty())
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Company Name</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Role</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Years</th>
+                                            <th scope="col" class="relative px-6 py-3"><span
+                                                    class="sr-only">Actions</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @foreach ($applicant->workExperiences as $experience)
+                                            <tr class="hover:bg-gray-50">
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    {{ $experience->company_name }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $experience->role }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $experience->start_year }} -
+                                                    {{ $experience->end_year ?? 'Present' }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <a href="{{ route('work-experiences.edit', $experience->id) }}"
+                                                        class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
+                                                    <form
+                                                        action="{{ route('work-experiences.destroy', $experience->id) }}"
+                                                        method="POST" class="inline-block"
+                                                        onsubmit="return confirm('Are you sure you want to delete this work experience record?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="text-red-600 hover:text-red-900">Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <div class="bg-gray-50 p-4 rounded-md shadow-inner text-center text-gray-500 italic">
+                                    No work experience records found for this applicant.
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -67,23 +240,21 @@
                         <h3 class="text-xl font-semibold text-gray-800 mb-3">Curriculum Vitae</h3>
                         @if ($applicant->curriculum_vitae)
                             <div class="w-full flex flex-col items-start">
-                                {{-- Attempt to embed using <embed> tag --}}
                                 <embed src="{{ Storage::url($applicant->curriculum_vitae) }}" type="application/pdf"
                                     class="w-full h-screen mb-3 border border-gray-300 rounded-lg shadow-md">
 
-                                {{-- Fallback/Alternative: Button to open in new tab --}}
                                 <a href="{{ Storage::url($applicant->curriculum_vitae) }}" target="_blank"
                                     class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 mt-4">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"></path>
                                     </svg>
                                     View CV (Opens in new tab)
                                 </a>
                                 <p class="text-sm text-gray-500 mt-2">
-                                    If the CV does not display above, please click the "View CV" button to open it in a
-                                    new tab.
+                                    If the CV does not display above, please click the "View CV" button to open it
+                                    in a new tab.
                                 </p>
                             </div>
                         @else

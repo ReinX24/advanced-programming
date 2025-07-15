@@ -17,7 +17,7 @@ class ApplicantFactory extends Factory
      */
     public function definition(): array
     {
-        $educationalAttainments = ['Primary', 'Secondary', 'Vocational', 'Bachelor', 'Master', 'Doctoral'];
+        // $educationalAttainments = ['Primary', 'Secondary', 'Vocational', 'Bachelor', 'Master', 'Doctoral'];
         $medicalStatuses = ['Pending', 'Fit To Work'];
         $applicantStatuses = ['Line Up', 'On Process', 'For Interview', 'For Medical', 'Deployed'];
 
@@ -26,8 +26,8 @@ class ApplicantFactory extends Factory
             'age' => $this->faker->numberBetween(18, 65),
             'profile_photo' => 'https://placehold.co/150x150/aabbcc/ffffff?text=Profile', // Placeholder image URL
             'curriculum_vitae' => 'https://example.com/cvs/' . Str::random(10) . '.pdf', // Placeholder document URL
-            'working_experience' => $this->faker->paragraphs(rand(1, 3), true),
-            'educational_attainment' => $this->faker->randomElement($educationalAttainments),
+            // 'working_experience' => $this->faker->paragraphs(rand(1, 3), true),
+            // 'educational_attainment' => $this->faker->randomElement($educationalAttainments),
             'medical' => $this->faker->randomElement($medicalStatuses),
             'status' => $this->faker->randomElement($applicantStatuses),
         ];

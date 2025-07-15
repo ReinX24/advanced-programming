@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\ApplicationFeeController;
+use App\Http\Controllers\EducationalAttainmentController;
 use App\Http\Controllers\JobOpeningController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\WorkExperienceController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Models\ApplicationFee;
+use App\Models\EducationalAttainment;
 use App\Models\JobOpening;
 use App\Models\UserController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +40,67 @@ Route::delete('/jobs/{job}/detachApplicant/{applicant}', [JobOpeningController::
 // TODO: implement conditionally showing elements on page
 // Applicant routes
 Route::resource('applicants', ApplicantController::class)->middleware('auth');
+
+// Educational attainment routes
+Route::get(
+    '/educational-attainment/applicant/{applicant}',
+    [EducationalAttainmentController::class, 'create']
+)->name('educational-attainments.create')->middleware('auth');
+
+Route::post(
+    '/educational-attainment/applicant/{applicant}',
+    [EducationalAttainmentController::class, 'store']
+)->name('educational-attainments.store')->middleware('auth');
+
+Route::get(
+    '/educational-attainments/{educational_attainment}/edit',
+    [EducationalAttainmentController::class, 'edit']
+)
+    ->name('educational-attainments.edit');
+
+Route::put(
+    '/educational-attainments/{educationalAttainment}',
+    [EducationalAttainmentController::class, 'update']
+)
+    ->name('educational-attainments.update');
+
+Route::delete(
+    '/education-attainment/applicant/{educationalAttainment}/destroy',
+    [EducationalAttainmentController::class, 'destroy']
+)->name('educational-attainments.destroy')->middleware('auth');
+
+// Work experience routes
+Route::middleware('auth')->group(function () {
+    Route::get(
+        '/applicants/{applicant}/work-experiences/create',
+        [WorkExperienceController::class, 'create']
+    )
+        ->name('work-experiences.create');
+
+    Route::post(
+        '/applicants/{applicant}/work-experiences',
+        [WorkExperienceController::class, 'store']
+    )
+        ->name('work-experiences.store');
+
+    Route::get(
+        '/work-experiences/{work_experience}/edit',
+        [WorkExperienceController::class, 'edit']
+    )
+        ->name('work-experiences.edit');
+
+    Route::put(
+        '/work-experiences/{work_experience}',
+        [WorkExperienceController::class, 'update']
+    )
+        ->name('work-experiences.update');
+
+    Route::delete(
+        '/work-experiences/{work_experience}',
+        [WorkExperienceController::class, 'destroy']
+    )
+        ->name('work-experiences.destroy');
+});
 
 // Finance routes / Application fee
 Route::resource('application_fees', ApplicationFeeController::class)->middleware('auth');

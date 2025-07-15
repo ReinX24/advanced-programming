@@ -57,14 +57,14 @@
 -   Register / Create User
 -   Delete user
 
-#### Educational Attainment
+#### Educational Attainment (DONE)
 
 -   School
 -   Educational Level
 -   Start Year
 -   End Year
 
-#### Working Attainment
+#### Working Attainment (DONE)
 
 -   Location
 -   Role
