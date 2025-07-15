@@ -110,8 +110,8 @@
                                                     Owner
                                                 </span>
                                             @else
-                                                <a href="{{ route('user_management.edit', $user->id) }}"
-                                                    class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                                <a href="{{ route('user_management.show', $user->id) }}"
+                                                    class="text-indigo-600 hover:text-indigo-900">View</a>
                                             @endif
                                         </td>
                                     </tr>

@@ -8,8 +8,9 @@ use App\Models\Applicant;
 use App\Models\JobOpening;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Twilio\Rest\Bulkexports\V1\Export\JobList;
 
 class JobOpeningController extends Controller
 {
@@ -32,6 +33,8 @@ class JobOpeningController extends Controller
      */
     public function create()
     {
+        Gate::authorize('isAdmin');
+
         return view('job_openings.create');
     }
 
@@ -40,6 +43,8 @@ class JobOpeningController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('isAdmin');
+
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -79,6 +84,8 @@ class JobOpeningController extends Controller
      */
     public function edit(JobOpening $job)
     {
+        Gate::authorize('isAdmin');
+
         return view('job_openings.edit', ['job' => $job]);
     }
 
@@ -87,40 +94,68 @@ class JobOpeningController extends Controller
      */
     public function update(Request $request, JobOpening $job)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'date_needed' => 'required|date',
-            'date_expiry' => 'nullable|date|after_or_equal:date_needed',
-            'location' => 'required|string|max:255',
+        Gate::authorize('isAdmin');
+
+        // $validatedData = $request->validate([
+        //     'title' => 'required|string|max:255',
+        //     'description' => 'required|string',
+        //     'date_needed' => 'required|date',
+        //     'date_expiry' => 'nullable|date|after_or_equal:date_needed',
+        //     'location' => 'required|string|max:255',
+        // ]);
+
+        // $dateNeeded = Carbon::parse($validatedData['date_needed']);
+        // $dateExpiry = $validatedData['date_expiry'] ? Carbon::parse($validatedData['date_expiry']) : null;
+
+        // $determinedStatus = null;
+
+        // if ($dateExpiry) {
+        //     if ($dateNeeded->greaterThan($dateExpiry)) {
+        //         $determinedStatus = 'expired';
+        //     } elseif ($dateNeeded->lessThan($dateExpiry) && Carbon::now()->lessThan($dateExpiry)) {
+        //         $determinedStatus = 'active';
+        //     } elseif ($dateExpiry->isPast()) {
+        //         $determinedStatus = 'expired';
+        //     }
+        // } else {
+        //     $determinedStatus = 'active';
+        // }
+
+        // $validatedData['status'] = $determinedStatus;
+
+        // $job->title = $validatedData["title"];
+        // $job->location = $validatedData["location"];
+        // $job->description = $validatedData["description"];
+        // $job->date_needed = $validatedData["date_needed"];
+        // $job->date_expiry = $validatedData["date_expiry"];
+        // $job->status = $validatedData["status"];
+
+        // $job->save();
+
+        // event(new CheckJobForExpiry($job));
+
+        // return redirect()->route('jobs.show', $job)
+        //     ->with('success', 'Job opening updated successfully!');
+
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'date_needed' => ['required', 'date'],
+            'date_expiry' => ['nullable', 'date', 'after_or_equal:date_needed'],
+            'status' => ['required', 'string', Rule::in(['active', 'inactive', 'expired'])],
         ]);
 
-        $dateNeeded = Carbon::parse($validatedData['date_needed']);
-        $dateExpiry = $validatedData['date_expiry'] ? Carbon::parse($validatedData['date_expiry']) : null;
+        $job->title = $request->title;
+        $job->location = $request->location;
+        $job->description = $request->description;
+        $job->date_needed = $request->date_needed;
+        $job->date_expiry = $request->date_expiry;
+        $job->status = $request->status;
 
-        $determinedStatus = null;
+        $job->save();
 
-        if ($dateExpiry) {
-            if ($dateNeeded->greaterThan($dateExpiry)) {
-                $determinedStatus = 'expired';
-            } elseif ($dateNeeded->lessThan($dateExpiry) && Carbon::now()->lessThan($dateExpiry)) {
-                $determinedStatus = 'active';
-            } elseif ($dateExpiry->isPast()) {
-                $determinedStatus = 'expired';
-            }
-        } else {
-            // Set status as active if the dateExpiry is null
-            $determinedStatus = 'active';
-        }
-
-        $validatedData['status'] = $determinedStatus;
-
-        $job->update($validatedData);
-
-        event(new CheckJobForExpiry($job));
-
-        return redirect()->route('jobs.show', $job)
-            ->with('success', 'Job opening updated successfully!');
+        return redirect()->route('jobs.show', $job)->with('success', 'Job opening updated successfully!');
     }
 
     /**
@@ -128,6 +163,8 @@ class JobOpeningController extends Controller
      */
     public function destroy(JobOpening $job)
     {
+        Gate::authorize('isAdmin');
+
         $job->delete();
 
         return redirect()->route("jobs.index")->with('success', 'Job opening deleted successfully!');
@@ -135,6 +172,8 @@ class JobOpeningController extends Controller
 
     public function toggleStatus(JobOpening $job)
     {
+        Gate::authorize("isAdmin");
+
         $job->status = $job->status === "active" ? "inactive" : "active";
 
         $job->save();
@@ -145,6 +184,8 @@ class JobOpeningController extends Controller
 
     public function markAsExpired(JobOpening $job)
     {
+        Gate::authorize('isAdmin');
+
         $job->status = 'expired';
 
         $job->save();
@@ -155,6 +196,8 @@ class JobOpeningController extends Controller
 
     public function addApplicant(JobOpening $job)
     {
+        Gate::authorize('isAdmin');
+
         // Get IDs of applicants already added for this job
         $currentApplicantIds = $job->applicants->pluck('id')->toArray();
 
@@ -166,6 +209,8 @@ class JobOpeningController extends Controller
 
     public function attachApplicant(Request $request, JobOpening $job)
     {
+        Gate::authorize('isAdmin');
+
         $request->validate([
             'applicant_id' => [
                 'required',
@@ -194,6 +239,8 @@ class JobOpeningController extends Controller
 
     public function detachApplicant(JobOpening $job, Applicant $applicant)
     {
+        Gate::authorize('isAdmin');
+
         try {
             // Detach the applicant from the job opening
             $job->applicants()->detach($applicant);

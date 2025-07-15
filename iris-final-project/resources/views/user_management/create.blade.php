@@ -6,16 +6,14 @@
     </x-slot>
 
     <div class="py-12">
-        {{-- Adjusted max-w to match the job opening page's main content wrapper --}}
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Added p-6 to match the outer padding of the job opening page --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                {{-- Inner padding div, consistent with job opening page --}}
                 <div class="p-6 text-gray-900">
-                    {{-- H1 style adjusted to match job opening page --}}
                     <h1 class="text-3xl font-bold text-gray-900 mb-6">Create New User</h1>
 
-                    <form method="POST" action="{{ route('user_management.store') }}">
+                    {{-- ADD onsubmit="this.querySelector('button[type=submit]').disabled = true;" to the form --}}
+                    <form method="POST" action="{{ route('user_management.store') }}"
+                        onsubmit="this.querySelector('button[type=submit]').disabled = true;">
                         @csrf {{-- CSRF token for security --}}
 
                         {{-- Name --}}
@@ -25,7 +23,6 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 value="{{ old('name') }}" required autofocus>
                             @error('name')
-                                {{-- Error message style adjusted to match job opening page --}}
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -37,7 +34,6 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 value="{{ old('email') }}" required>
                             @error('email')
-                                {{-- Error message style adjusted to match job opening page --}}
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -49,7 +45,6 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 required autocomplete="new-password">
                             @error('password')
-                                {{-- Error message style adjusted to match job opening page --}}
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -73,14 +68,13 @@
                                 <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                             </select>
                             @error('role')
-                                {{-- Error message style adjusted to match job opening page --}}
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Action Buttons - Styled to match the job opening page -->
+                        <!-- Action Buttons -->
                         <div class="mt-8 flex justify-end space-x-4">
-                            <!-- Cancel Button (similar to "Back to Job Openings") -->
+                            <!-- Cancel Button -->
                             <a href="{{ route('user_management.index') }}"
                                 class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -91,7 +85,7 @@
                                 Cancel
                             </a>
 
-                            <!-- Create User Button (similar to "Create Job") -->
+                            <!-- Create User Button -->
                             <button type="submit"
                                 class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"

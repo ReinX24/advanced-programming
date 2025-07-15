@@ -94,13 +94,14 @@
                                 @method('PUT')
                                 <input type="hidden" name="status" id="hidden-status-input"
                                     value="{{ $job->status }}">
-                                {{-- Include other required fields for validation --}}
-                                <input type="hidden" name="title" value="{{ $job->title }}">
-                                <input type="hidden" name="description" value="{{ $job->description }}">
+                                {{-- Ensure date_needed is always a valid string. It's required, so it should exist. --}}
                                 <input type="hidden" name="date_needed"
-                                    value="{{ $job->date_needed->format('Y-m-d') }}">
+                                    value="{{ $job->date_needed ? $job->date_needed->format('Y-m-d') : '' }}">
+                                {{-- Ensure date_expiry is always a valid string or empty if null --}}
                                 <input type="hidden" name="date_expiry"
                                     value="{{ $job->date_expiry ? $job->date_expiry->format('Y-m-d') : '' }}">
+                                <input type="hidden" name="title" value="{{ $job->title }}">
+                                <input type="hidden" name="description" value="{{ $job->description }}">
                                 <input type="hidden" name="location" value="{{ $job->location }}">
                             </form>
                         </div>
@@ -123,13 +124,14 @@
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="status" value="expired">
-                                {{-- Include other required fields for validation --}}
-                                <input type="hidden" name="title" value="{{ $job->title }}">
-                                <input type="hidden" name="description" value="{{ $job->description }}">
+                                {{-- Ensure date_needed is always a valid string. It's required, so it should exist. --}}
                                 <input type="hidden" name="date_needed"
-                                    value="{{ $job->date_needed->format('Y-m-d') }}">
+                                    value="{{ $job->date_needed ? $job->date_needed->format('Y-m-d') : '' }}">
+                                {{-- Ensure date_expiry is always a valid string or empty if null --}}
                                 <input type="hidden" name="date_expiry"
                                     value="{{ $job->date_expiry ? $job->date_expiry->format('Y-m-d') : '' }}">
+                                <input type="hidden" name="title" value="{{ $job->title }}">
+                                <input type="hidden" name="description" value="{{ $job->description }}">
                                 <input type="hidden" name="location" value="{{ $job->location }}">
 
                                 <button type="submit"

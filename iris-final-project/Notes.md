@@ -61,3 +61,15 @@ php artisan make:controller ReportController
 #### Login user, register user, create user, delete user
 
 php artisan make:migration add_role_to_users
+
+#### Logging user logins
+
+php artisan make:migration create_login_events_table
+
+php artisan make:model LoginEvent
+
+php artisan make:listener LogSuccessfulLogin --event=Illuminate\Auth\Events\Login
+
+#### Logging admin actions
+
+php artisan make:model AdminActionLog

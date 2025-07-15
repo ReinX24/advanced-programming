@@ -72,6 +72,24 @@
                             @enderror
                         </div>
 
+                        {{-- Status --}}
+                        <div class="mb-6">
+                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                            <select name="status" id="status"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                required>
+                                <option value="active" {{ old('status', $job->status) == 'active' ? 'selected' : '' }}>
+                                    Active</option>
+                                <option value="inactive"
+                                    {{ old('status', $job->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="expired"
+                                    {{ old('status', $job->status) == 'expired' ? 'selected' : '' }}>Expired</option>
+                            </select>
+                            @error('status')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Action Buttons -->
                         <div class="mt-8 flex justify-end space-x-4">
                             <!-- Back Button -->

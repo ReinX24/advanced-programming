@@ -31,7 +31,7 @@
 
 -   Applicant has paid for application fee
 
-## Manage User
+## Manage User (DONE)
 
 -   CRUD for users
 -   No registration, users made by admin
@@ -53,7 +53,6 @@
 
 #### Log User Activity
 
--   Login user
--   Register User
--   Create User
+-   Login User
+-   Register / Create User
 -   Delete user

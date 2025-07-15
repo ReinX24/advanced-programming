@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AdminUserCreated;
+use App\Models\AdminActionLog;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -43,15 +46,30 @@ class UserManagementController extends Controller
         ]);
 
         // 2. Create a new User record in the database
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password), // Hash the password for security
             'role' => $request->role, // Assign the selected role
         ]);
 
+        $admin = Auth::user(); // Get the currently authenticated user (who is the admin creating the user)
+
+        // Store the admin action in the database
+        AdminActionLog::create([
+            'admin_id' => $admin ? $admin->id : null, // Store the ID of the admin who performed the action
+            'action_type' => 'user_created', // Define the type of action
+            'target_id' => $user->id, // Store the ID of the affected user
+            'target_type' => get_class($user), // Store the full class name of the affected model (e.g., 'App\Models\User')
+            'details' => [ // Store additional relevant details about the action as JSON
+                'email' => $user->email,
+                'role' => $user->role,
+                'name' => $user->name,
+            ],
+        ]);
+
         // 3. Redirect to the user index page with a success message
-        return redirect()->route('user_management.index')->with('success', 'User created successfully!');
+        return redirect()->route('user_management.show', $user->id)->with('success', 'User created successfully!');
     }
 
     /**
@@ -59,7 +77,7 @@ class UserManagementController extends Controller
      */
     public function show(string $id)
     {
-        dd('show');
+        return view("user_management.show", ["user" => User::findOrFail($id)]);
     }
 
     /**
@@ -107,8 +125,23 @@ class UserManagementController extends Controller
         // 5. Save the changes to the database
         $user->save();
 
+        $admin = Auth::user(); // Get the currently authenticated user (who is the admin creating the user)
+
+        // Store the admin action in the database
+        AdminActionLog::create([
+            'admin_id' => $admin ? $admin->id : null, // Store the ID of the admin who performed the action
+            'action_type' => 'user_updated', // Define the type of action
+            'target_id' => $user->id, // Store the ID of the affected user
+            'target_type' => get_class($user), // Store the full class name of the affected model (e.g., 'App\Models\User')
+            'details' => [ // Store additional relevant details about the action as JSON
+                'email' => $user->email,
+                'role' => $user->role,
+                'name' => $user->name,
+            ],
+        ]);
+
         // 6. Redirect back to the user index page with a success message
-        return redirect()->route('user_management.index')->with('success', 'User updated successfully!');
+        return redirect()->route('user_management.show', $user->id)->with('success', 'User updated successfully!');
     }
 
     /**
@@ -116,6 +149,24 @@ class UserManagementController extends Controller
      */
     public function destroy(string $id)
     {
-        dd('destroy');
+        $user = User::findOrFail($id);
+        $admin = Auth::user();
+
+        // Store the admin action in the database
+        AdminActionLog::create([
+            'admin_id' => $admin ? $admin->id : null, // Store the ID of the admin who performed the action
+            'action_type' => 'user_deleted', // Define the type of action
+            'target_id' => $user->id, // Store the ID of the affected user
+            'target_type' => get_class($user), // Store the full class name of the affected model (e.g., 'App\Models\User')
+            'details' => [ // Store additional relevant details about the action as JSON
+                'email' => $user->email,
+                'role' => $user->role,
+                'name' => $user->name,
+            ],
+        ]);
+
+        $user->delete();
+
+        return redirect()->route('user_management.index')->with('success', 'User deleted successfully!');
     }
 }

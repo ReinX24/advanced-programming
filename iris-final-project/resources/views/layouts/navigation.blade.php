@@ -54,6 +54,12 @@
                                 <x-dropdown-link :href="route('reports.applicants')">
                                     {{ __('Applicant Reports') }}
                                 </x-dropdown-link>
+                                <x-dropdown-link :href="route('reports.login-events')">
+                                    {{ __('Login Reports') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('reports.admin-actions')">
+                                    {{ __('Admin Actions Reports') }}
+                                </x-dropdown-link>
                                 {{-- Add more report links here as needed --}}
                             </x-slot>
                         </x-dropdown>
