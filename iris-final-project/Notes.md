@@ -85,3 +85,13 @@ php artisan make:controller EducationalAttainmentControler --resource
 php artisan make:migration create_work_experiences_table
 
 php artisan make:model WorkExperience
+
+php artisan make:controller WorkExperienceController
+
+#### References
+
+php artisan make:migration create_references_table
+
+php artisan make:model Reference
+
+php artisan make:controller ReferenceController

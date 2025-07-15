@@ -36,4 +36,9 @@ class Applicant extends Model
     {
         return $this->hasMany(WorkExperience::class);
     }
+
+    public function references()
+    {
+        return $this->hasMany(Reference::class);
+    }
 }

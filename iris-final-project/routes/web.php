@@ -5,6 +5,7 @@ use App\Http\Controllers\ApplicationFeeController;
 use App\Http\Controllers\EducationalAttainmentController;
 use App\Http\Controllers\JobOpeningController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\WorkExperienceController;
@@ -42,32 +43,34 @@ Route::delete('/jobs/{job}/detachApplicant/{applicant}', [JobOpeningController::
 Route::resource('applicants', ApplicantController::class)->middleware('auth');
 
 // Educational attainment routes
-Route::get(
-    '/educational-attainment/applicant/{applicant}',
-    [EducationalAttainmentController::class, 'create']
-)->name('educational-attainments.create')->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::get(
+        '/educational-attainment/applicant/{applicant}',
+        [EducationalAttainmentController::class, 'create']
+    )->name('educational-attainments.create');
 
-Route::post(
-    '/educational-attainment/applicant/{applicant}',
-    [EducationalAttainmentController::class, 'store']
-)->name('educational-attainments.store')->middleware('auth');
+    Route::post(
+        '/educational-attainment/applicant/{applicant}',
+        [EducationalAttainmentController::class, 'store']
+    )->name('educational-attainments.store');
 
-Route::get(
-    '/educational-attainments/{educational_attainment}/edit',
-    [EducationalAttainmentController::class, 'edit']
-)
-    ->name('educational-attainments.edit');
+    Route::get(
+        '/educational-attainments/{educational_attainment}/edit',
+        [EducationalAttainmentController::class, 'edit']
+    )
+        ->name('educational-attainments.edit');
 
-Route::put(
-    '/educational-attainments/{educationalAttainment}',
-    [EducationalAttainmentController::class, 'update']
-)
-    ->name('educational-attainments.update');
+    Route::put(
+        '/educational-attainments/{educationalAttainment}',
+        [EducationalAttainmentController::class, 'update']
+    )
+        ->name('educational-attainments.update');
 
-Route::delete(
-    '/education-attainment/applicant/{educationalAttainment}/destroy',
-    [EducationalAttainmentController::class, 'destroy']
-)->name('educational-attainments.destroy')->middleware('auth');
+    Route::delete(
+        '/education-attainment/applicant/{educationalAttainment}/destroy',
+        [EducationalAttainmentController::class, 'destroy']
+    )->name('educational-attainments.destroy')->middleware('auth');
+});
 
 // Work experience routes
 Route::middleware('auth')->group(function () {
@@ -100,6 +103,39 @@ Route::middleware('auth')->group(function () {
         [WorkExperienceController::class, 'destroy']
     )
         ->name('work-experiences.destroy');
+});
+
+// References routes
+Route::middleware('auth')->group(function () {
+    Route::get(
+        '/applicants/{applicant}/references/create',
+        [ReferenceController::class, 'create']
+    )
+        ->name('references.create');
+
+    Route::post(
+        '/applicants/{applicant}/references',
+        [ReferenceController::class, 'store']
+    )
+        ->name('references.store');
+
+    Route::get(
+        '/references/{reference}/edit',
+        [ReferenceController::class, 'edit']
+    )
+        ->name('references.edit');
+
+    Route::put(
+        '/references/{reference}',
+        [ReferenceController::class, 'update']
+    )
+        ->name('references.update');
+
+    Route::delete(
+        '/references/{reference}',
+        [ReferenceController::class, 'destroy']
+    )
+        ->name('references.destroy');
 });
 
 // Finance routes / Application fee

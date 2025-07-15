@@ -68,6 +68,9 @@ class ApplicantController extends Controller
      */
     public function show(Applicant $applicant)
     {
+        $applicant->load(
+            ['educationalAttainments', 'workExperiences', 'references']
+        );
         return view('applicants.show', ['applicant' => $applicant]);
     }
 
@@ -129,47 +132,4 @@ class ApplicantController extends Controller
         return redirect()->route('applicants.index')
             ->with('success', 'Applicant deleted successfully!');
     }
-
-    public function createEducationalAttainment(int $applicantId)
-    {
-        return view("applicants.create-educational", [
-            'applicant' => Applicant::find($applicantId)
-        ]);
-    }
-
-    public function storeEducationalAttainment(Request $request, int $applicantId)
-    {
-        // Validate the incoming array of educational attainments
-        $request->validate([
-            'educational_attainments' => ['required', 'array'],
-            'educational_attainments.*.school' => ['required', 'string', 'max:255'],
-            'educational_attainments.*.educational_level' => ['required', 'string', Rule::in(['Primary', 'Secondary', 'Vocational', 'Bachelor', 'Master', 'Doctoral'])],
-            'educational_attainments.*.start_year' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
-            'educational_attainments.*.end_year' => ['nullable', 'integer', 'min:1900', 'max:' . (date('Y') + 5), 'after_or_equal:educational_attainments.*.start_year'],
-        ]);
-
-        // Delete existing educational attainments if you want to replace them,
-        // or just add new ones if you want to append.
-        // For this scenario, we'll assume you're adding new ones.
-        // If you want to replace all, uncomment the line below:
-        // $applicant->educationalAttainments()->delete();
-
-        foreach ($request->input('educational_attainments') as $attainmentData) {
-            // Ensure data is not empty (e.g., if a row was added but left blank)
-            if (!empty(array_filter($attainmentData))) {
-                $attainmentData["applicant_id"] = $applicantId;
-
-                $applicant = Applicant::find($applicantId);
-
-                $applicant->educationalAttainments()->create($attainmentData);
-            }
-        }
-
-        return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Educational attainment records added successfully!');
-    }
-
-    public function createWorkAttainment() {}
-
-    public function storeWorkAttainment() {}
 }
