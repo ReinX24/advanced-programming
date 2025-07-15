@@ -38,21 +38,42 @@
 
 ## Reports (Export to EXCEL)
 
-#### Applicant Reports (TO TEST)
+#### Applicant Reports (DONE)
 
 -   Filter Date Range (Start Date and End Date) TO IMPLEMENT, FILTER CREATED AT
 -   Filter By User
 -   Status (Line Up, On Process, For Interview, For Medical, Deployed)
 
-#### Job Reports (TO TEST)
+#### Job Reports (DONE)
 
 -   Filter Date Range
 -   Filter By User
 
 ## Audit Trail
 
-#### Log User Activity
+#### Log User Activity (TO REFINE)
 
 -   Login User
 -   Register / Create User
 -   Delete user
+
+#### Educational Attainment
+
+-   School
+-   Educational Level
+-   Start Year
+-   End Year
+
+#### Working Attainment
+
+-   Location
+-   Role
+-   Start Year
+-   End Year
+
+#### References
+
+-   Name
+-   Email Address
+-   Company
+-   Role

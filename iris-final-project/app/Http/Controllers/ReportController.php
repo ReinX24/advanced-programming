@@ -381,7 +381,6 @@ class ReportController extends Controller
             return Str::afterLast($type, '\\'); // Get just the class name without namespace
         })->unique()->toArray();
 
-
         // Pass the paginated data and filter options to the view
         return view('reports.admin-actions', compact('adminActions', 'actionTypes', 'targetTypes'));
     }
