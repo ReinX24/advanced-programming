@@ -174,7 +174,10 @@
                                                 Email: {{ $action->target->email ?? 'N/A' }}<br>
                                                 Role: {{ $action->target->role ?? 'N/A' }}
                                             @elseif ($action->details)
-                                                <pre class="text-xs text-gray-700">{{ json_encode($action->details, JSON_PRETTY_PRINT) }}</pre>
+                                                {{-- <pre class="text-xs text-gray-700">{{ json_encode($action->details, JSON_PRETTY_PRINT) }}</pre> --}}
+                                                Name: {{ $action->details['name'] ?? 'N/A' }}<br>
+                                                Email: {{ $action->details['email'] ?? 'N/A' }}<br>
+                                                Role: {{ $action->details['role'] ?? 'N/A' }}
                                             @else
                                                 N/A
                                             @endif

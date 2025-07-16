@@ -105,26 +105,6 @@
                             @enderror
                         </div>
 
-                        {{-- Educational Attainment --}}
-                        <div class="mb-4">
-                            <label for="educational_attainment"
-                                class="block text-sm font-medium text-gray-700">Educational Attainment</label>
-                            <select name="educational_attainment" id="educational_attainment"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                required>
-                                <option value="">Select Attainment Level</option>
-                                @foreach (['Primary', 'Secondary', 'Vocational', 'Bachelor', 'Master', 'Doctoral'] as $level)
-                                    <option value="{{ $level }}"
-                                        {{ old('educational_attainment', $applicant->educational_attainment) == $level ? 'selected' : '' }}>
-                                        {{ $level }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('educational_attainment')
-                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                         {{-- Medical Status --}}
                         <div class="mb-4">
                             <label for="medical" class="block text-sm font-medium text-gray-700">Medical Status</label>

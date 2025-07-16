@@ -6,6 +6,7 @@ use App\Models\Applicant;
 use App\Models\ApplicationFee;
 use App\Models\JobOpening;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class ApplicationFeeController extends Controller
@@ -27,6 +28,8 @@ class ApplicationFeeController extends Controller
      */
     public function create()
     {
+        Gate::authorize('isAdmin');
+
         $applicants = Applicant::all(); // Get all applicants for the dropdown
         $jobOpenings = JobOpening::all(); // Get all job openings for the dropdown
 
@@ -38,6 +41,8 @@ class ApplicationFeeController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('isAdmin');
+
         $validatedData = $request->validate([
             'applicant_id' => 'required|exists:applicants,id',
             'job_opening_id' => 'nullable|exists:job_openings,id',
@@ -67,6 +72,8 @@ class ApplicationFeeController extends Controller
      */
     public function show(ApplicationFee $applicationFee)
     {
+        Gate::authorize('isAdmin');
+
         return view('application_fees.show', ['applicationFee' => $applicationFee]);
     }
 
@@ -75,6 +82,8 @@ class ApplicationFeeController extends Controller
      */
     public function edit(ApplicationFee $applicationFee)
     {
+        Gate::authorize('isAdmin');
+
         $applicants = Applicant::all(); // Get all applicants for the dropdown
         $jobOpenings = JobOpening::all(); // Get all job openings for the dropdown
 
@@ -86,6 +95,8 @@ class ApplicationFeeController extends Controller
      */
     public function update(Request $request, ApplicationFee $applicationFee)
     {
+        Gate::authorize('isAdmin');
+
         $validatedData = $request->validate([
             'applicant_id' => 'required|exists:applicants,id',
             'job_opening_id' => 'nullable|exists:job_openings,id',
@@ -116,6 +127,8 @@ class ApplicationFeeController extends Controller
      */
     public function destroy(ApplicationFee $applicationFee)
     {
+        Gate::authorize('isAdmin');
+
         $applicationFee->delete();
 
         return redirect()->route('application_fees.index')

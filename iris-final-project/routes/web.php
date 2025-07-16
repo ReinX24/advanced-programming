@@ -152,32 +152,55 @@ Route::middleware('auth')->group(function () {
 });
 
 // Finance routes / Application fee
-Route::resource('application_fees', ApplicationFeeController::class)->middleware('auth');
+Route::resource('application_fees', ApplicationFeeController::class)
+    ->middleware('auth');
 
 // Report Routes
-Route::get('/reports/jobs', [ReportController::class, 'jobReports'])->name('reports.jobs')->middleware('auth');
+Route::get('/reports/jobs', [ReportController::class, 'jobReports'])
+    ->name('reports.jobs')->middleware('auth');
 
-Route::get('/reports/applicants', [ReportController::class, 'applicantReports'])->name('reports.applicants')->middleware('auth');
+Route::get('/reports/applicants', [
+    ReportController::class,
+    'applicantReports'
+])->name('reports.applicants')->middleware('auth');
 
-Route::get('/reports/jobs/download-csv', [ReportController::class, 'downloadJobsCsv'])
+Route::get('/reports/jobs/download-csv', [
+    ReportController::class,
+    'downloadJobsCsv'
+])
     ->name('reports.jobs.download-csv')->middleware('auth');
 
-Route::get('/reports/applicants/download-csv', [ReportController::class, 'downloadApplicantsCsv'])
+Route::get('/reports/applicants/download-csv', [
+    ReportController::class,
+    'downloadApplicantsCsv'
+])
     ->name('reports.applicants.download-csv')->middleware('auth');
 
 Route::get('/reports/login-events', [ReportController::class, 'loginReports'])
     ->name('reports.login-events')->middleware('auth');
 
-Route::get('/reports/login-events/download-csv', [ReportController::class, 'downloadLoginReportsCsv'])
+Route::get('/reports/login-events/download-csv', [
+    ReportController::class,
+    'downloadLoginReportsCsv'
+])
     ->name('reports.login-events.download-csv')->middleware('auth');
 
 // Route for displaying the admin actions report page
-Route::get('/reports/admin-actions', [ReportController::class, 'adminActionReports'])->name('reports.admin-actions')->middleware('auth');
+Route::get('/reports/admin-actions', [
+    ReportController::class,
+    'adminActionReports'
+])->name('reports.admin-actions')->middleware('auth');
 
 // Route for downloading the admin actions report as CSV
-Route::get('/reports/admin-actions/download-csv', [ReportController::class, 'downloadAdminActionReportsCsv'])->name('reports.admin-actions.download-csv')->middleware('auth');
+Route::get(
+    '/reports/admin-actions/download-csv',
+    [ReportController::class, 'downloadAdminActionReportsCsv']
+)->name('reports.admin-actions.download-csv')->middleware('auth');
 
 // User management routes
-Route::resource('user_management', UserManagementController::class)->middleware('auth');
+Route::resource(
+    'user_management',
+    UserManagementController::class
+)->middleware('auth');
 
 require __DIR__ . '/auth.php';

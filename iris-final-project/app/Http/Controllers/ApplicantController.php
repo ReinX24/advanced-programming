@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Applicant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -24,6 +25,8 @@ class ApplicantController extends Controller
      */
     public function create()
     {
+        Gate::authorize('isAdmin');
+
         return view('applicants.create');
     }
 
@@ -79,6 +82,8 @@ class ApplicantController extends Controller
      */
     public function edit(Applicant $applicant)
     {
+        Gate::authorize('isAdmin');
+
         return view('applicants.edit', ['applicant' => $applicant]);
     }
 
@@ -87,6 +92,8 @@ class ApplicantController extends Controller
      */
     public function update(Request $request, Applicant $applicant)
     {
+        Gate::authorize('isAdmin');
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'age' => 'required|integer|min:18|max:100',
@@ -127,6 +134,8 @@ class ApplicantController extends Controller
      */
     public function destroy(Applicant $applicant)
     {
+        Gate::authorize('isAdmin');
+
         $applicant->delete();
 
         return redirect()->route('applicants.index')
